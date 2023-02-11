@@ -1,0 +1,44 @@
+name: valuing_alternative_work_arrangements
+channels:
+  - conda-forge
+  - plotly
+
+  - nodefaults
+
+dependencies:
+  - python=3.11
+  - pip >=21.1
+  - setuptools_scm
+  - toml
+
+  # Reproducibility
+  - conda-lock
+
+  # Package dependencies
+  - pytask>=0.2
+  - pytask-latex>=0.2
+
+
+
+
+  # Misc
+  - black
+  - pre-commit
+  - pytest
+  - pytest-cov
+  - pytest-xdist
+  - tox-conda
+
+  - pdbpp
+  - ipykernel
+  - jupyterlab
+  - pyyaml
+  - plotly>=5.5.0
+  - pandas
+  - statsmodels
+  - python-graphviz
+  - python-kaleido
+
+
+  - pip:
+    - -e .  # installs the project
