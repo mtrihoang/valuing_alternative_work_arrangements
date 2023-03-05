@@ -2,10 +2,10 @@
 requires = ["setuptools>=45", "wheel", "setuptools_scm[toml]>=6.0"]
 
 [tool.setuptools_scm]
-write_to = "src/example_project/_version.py"
+write_to = "src/valuing_alternative_work_arrangements/_version.py"
 
 [tool.pytask.ini_options]
-paths = ["./src/example_project", "./src/paper"]
+paths = ["./src/valuing_alternative_work_arrangements", "./src/paper"]
 infer_latex_dependencies = true
 
 [tool.ruff]
