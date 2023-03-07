@@ -6,11 +6,11 @@ def clean_cps_march2016(url_cps_march2016):
     """Clean the cps_march2016 data.
 
     Args:
-        df (str): The Uniform Resource Locators contains the cps_march2016 data.
+        url_cps_march2016 (str): The Uniform Resource Locators contains the cps_march2016 data.
 
     Returns:
     -------
-        df (pandas.DataFrame): the final cpsmarch2016 data.
+        df (pandas.DataFrame): The final cpsmarch2016 data.
 
     """
     df = pd.read_stata(url_cps_march2016)
@@ -87,11 +87,11 @@ def clean_cps_wss(url_cps_wss):
     """Clean the cps_wss data.
 
     Args:
-        df (str): The Uniform Resource Locators contains the cps_wss data.
+        url_cps_wss (str): The Uniform Resource Locators contains the cps_wss data.
 
     Returns:
     -------
-        df (pandas.DataFrame): the final cps_wss data.
+        df (pandas.DataFrame): The final cps_wss data.
 
     """
     df = pd.read_stata(url_cps_wss)
