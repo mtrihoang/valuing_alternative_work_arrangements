@@ -7,11 +7,11 @@ def me_correction(experimentdata):
     """Apply ME correction procedure in order to obtain the appropriate error rate.
 
     Args:
-        df (pandas.DataFrame): The experimentdata data.
+        experimentdata (pandas.DataFrame): The experimentdata data.
 
     Returns:
     -------
-        table_1 (pandas.DataFrame): Contain estimates for compensating differentials from the observational data using weekly earnings.
+        mm1 (pandas.DataFrame): Contain appropriate error rate for mylogit_mle2.
 
     """
     mm1 = (
