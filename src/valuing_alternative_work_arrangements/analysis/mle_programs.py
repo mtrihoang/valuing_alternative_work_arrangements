@@ -55,3 +55,22 @@ def me_correction(experimentdata):
     else:
         mm1["mmf1"] = mm1["mm1"]
     return mm1
+
+
+def mylogit_mle2(experimentdata):
+    """Apply the maximum likelihood estimation method to estimate the parameters of the
+    Multinomial Logit regression model.
+
+    Args:
+        experimentdata (pandas.DataFrame): The experimentdata data.
+
+    Returns:
+    -------
+        Display a summary of the results of the Multinomial Logit regression model.
+
+    """
+    df = experimentdata.dropna(subset=["wagegap", "chose_position1"])
+    y = df["chose_position1"]
+    X = df[["wagegap"]]
+    X = sm.add_constant(X)
+    sm.MNLogit(y, X).fit(method="newton")
