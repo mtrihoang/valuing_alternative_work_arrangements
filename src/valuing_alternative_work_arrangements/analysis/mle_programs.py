@@ -1,5 +1,7 @@
+import pandas as pd
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
+from scipy.special import expit
 
 
 def me_correction(df):
@@ -54,20 +56,29 @@ def me_correction(df):
     return mm1
 
 
-def mylogit_mle2(experimentdata):
+def mylogit_mle2(df):
     """Apply the maximum likelihood estimation method to estimate the parameters of the
-    Multinomial Logit regression model.
+    logistic regression model.
 
     Args:
-        experimentdata (pandas.DataFrame): The experimentdata data.
+        df (pandas.DataFrame): The experimentdata data.
 
     Returns:
     -------
-        Display a summary of the results of the Multinomial Logit regression model.
+        logit_fit_df (pandas.DataFrame): Contain estimates of the probability of choosing flexible schedule job.
 
     """
-    df = experimentdata.dropna(subset=["wagegap", "chose_position1"])
+    df = df.dropna(subset=["wagegap", "chose_position1"])
+    df = me_correction(df)
     y = df["chose_position1"]
     X = df[["wagegap"]]
     X = sm.add_constant(X)
-    sm.MNLogit(y, X).fit(method="newton")
+    model = sm.Logit(y, X)
+    result = model.fit(method="newton", cov_type="HC3", maxiter=100)
+    lfit = result.predict(X, linear=True)
+    prop_fit = expit(lfit)
+    rev_wagegap = -X["wagegap"]
+    logit_fit_df = pd.concat([rev_wagegap, prop_fit], axis=1)
+    logit_fit_df = logit_fit_df.rename(columns={0: "lnf", "wagegap": "rev_wagegap"})
+    logit_fit_df = logit_fit_df.sort_values("rev_wagegap")
+    return logit_fit_df
