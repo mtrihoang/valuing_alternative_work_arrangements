@@ -75,3 +75,23 @@ def table_1(df):
         },
     )
     return coef_df
+
+
+def table_3(df):
+    """Replicate table 3 of Mas, Alexandre, and Amanda Pallais (2017).
+
+    Args:
+        df (pandas.DataFrame): The cpswss data.
+
+    Returns:
+    -------
+        table_3 (pandas.DataFrame): Contain descriptive statistics of Experiment, UAS, and Comparison Samples.
+
+    """
+    prefix = ["emp_", "age_", "ed_", "race_"]
+    prefix_var = [df.columns[df.columns.str.startswith(i)].tolist() for i in prefix]
+    prefix_var = list(itertools.chain(*prefix_var))
+    prefix_var = ["female", *prefix_var]
+    stat_df = df[prefix_var].describe().T
+    table_3 = round(stat_df[["mean"]] * 100)
+    return table_3
