@@ -29,7 +29,7 @@ url_clean_cps_wss = "D:/Dropbox/epp/data2.dta"
 
 
 @pytask.mark.produces(BLD / "python" / "data" / "cps_wss.csv")
-def task_clean_cps_march2016(produces):
+def task_clean_cps_wss(produces):
     """Clean the cps_wss data from the Dropbox link and save it into the bld folder.
 
     Args:
