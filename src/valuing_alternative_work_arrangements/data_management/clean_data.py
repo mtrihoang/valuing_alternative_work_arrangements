@@ -1,8 +1,7 @@
 import numpy as np
-import pandas as pd
 
 
-def clean_cps_march2016(url_cps_march2016):
+def clean_cps_march2016(df):
     """Clean the cps_march2016 data.
 
     Args:
@@ -13,7 +12,6 @@ def clean_cps_march2016(url_cps_march2016):
         df (pandas.DataFrame): The final cpsmarch2016 data.
 
     """
-    df = pd.read_stata(url_cps_march2016)
     df.loc[(df["gtcbsast"] == 2) | (df["gtcbsast"] == 1), "any_city"] = 1
     df.loc[df["pesex"] == 2, "female"] = 1
     df["female"] = df["female"].fillna(0)
@@ -69,7 +67,7 @@ def clean_cps_march2016(url_cps_march2016):
         "ed_collegedeg",
     ] = 1
     df["ed_collegedeg"] = df["ed_collegedeg"].fillna(0)
-    df.loc[df["peeduca"] >= 40, "ed_morethancol"] = 1
+    df.loc[df["peeduca"] >= 44, "ed_morethancol"] = 1
     df["ed_morethancol"] = df["ed_morethancol"].fillna(0)
     df.loc[
         (df["peio1ocd"] == 4940)
@@ -83,7 +81,7 @@ def clean_cps_march2016(url_cps_march2016):
     return df
 
 
-def clean_cps_wss(url_cps_wss):
+def clean_cps_wss(df):
     """Clean the cps_wss data.
 
     Args:
@@ -94,7 +92,6 @@ def clean_cps_wss(url_cps_wss):
         df (pandas.DataFrame): The final cps_wss data.
 
     """
-    df = pd.read_stata(url_cps_wss)
     df.loc[
         (df["wkstat"] == 12)
         | (df["wkstat"] == 21)
@@ -121,41 +118,41 @@ def clean_cps_wss(url_cps_wss):
     df.loc[(df["hispan"] > 0) & (df["hispan"] < 900), "race_hisp"] = 1
     df.loc[(df["race_hisp"] != 1) & (df["hispan"] < 900), "race_hisp"] = 0
     df.loc[df["race"] == 200, "race_black"] = 1
-    df.loc[(df["race_black"] != 1) & (df["race"] != np.nan), "race_black"] = 0
+    df.loc[(df["race_black"] != 1) & (df["race"].notnull()), "race_black"] = 0
     df.loc[df["race"] == 100, "race_white"] = 1
-    df.loc[(df["race_white"] != 1) & (df["race"] != np.nan), "race_white"] = 0
+    df.loc[(df["race_white"] != 1) & (df["race"].notnull()), "race_white"] = 0
     df.loc[df["race"] == 300, "race_natamer"] = 1
-    df.loc[(df["race_natamer"] != 1) & (df["race"] != np.nan), "race_natamer"] = 0
+    df.loc[(df["race_natamer"] != 1) & (df["race"].notnull()), "race_natamer"] = 0
     df.loc[(df["race"] == 650) | (df["race"] == 651), "race_asian"] = 1
-    df.loc[(df["race_asian"] != 1) & (df["race"] != np.nan), "race_asian"] = 0
+    df.loc[(df["race_asian"] != 1) & (df["race"].notnull()), "race_asian"] = 0
     df.loc[df["race"] == 652, "race_pacisl"] = 1
-    df.loc[(df["race_pacisl"] != 1) & (df["race"] != np.nan), "race_pacisl"] = 0
+    df.loc[(df["race_pacisl"] != 1) & (df["race"].notnull()), "race_pacisl"] = 0
     df.loc[df["race"] > 700, "race_multirace"] = 1
-    df.loc[(df["race_multirace"] != 1) & (df["race"] != np.nan), "race_multirace"] = 0
+    df.loc[(df["race_multirace"] != 1) & (df["race"].notnull()), "race_multirace"] = 0
     df.loc[df["marst"] == 1, "mar_spouse"] = 1
-    df.loc[(df["mar_spouse"] != 1) & (df["marst"] != np.nan), "mar_spouse"] = 0
+    df.loc[(df["mar_spouse"] != 1) & (df["marst"].notnull()), "mar_spouse"] = 0
     df.loc[df["marst"] == 2, "mar_nospouse"] = 1
-    df.loc[(df["mar_nospouse"] != 1) & (df["marst"] != np.nan), "mar_nospouse"] = 0
+    df.loc[(df["mar_nospouse"] != 1) & (df["marst"].notnull()), "mar_nospouse"] = 0
     df.loc[df["marst"] == 3, "mar_separated"] = 1
-    df.loc[(df["mar_separated"] != 1) & (df["marst"] != np.nan), "mar_separated"] = 0
+    df.loc[(df["mar_separated"] != 1) & (df["marst"].notnull()), "mar_separated"] = 0
     df.loc[df["marst"] == 4, "mar_divorced"] = 1
-    df.loc[(df["mar_divorced"] != 1) & (df["marst"] != np.nan), "mar_divorced"] = 0
+    df.loc[(df["mar_divorced"] != 1) & (df["marst"].notnull()), "mar_divorced"] = 0
     df.loc[df["marst"] == 5, "mar_widowed"] = 1
-    df.loc[(df["mar_widowed"] != 1) & (df["marst"] != np.nan), "mar_widowed"] = 0
+    df.loc[(df["mar_widowed"] != 1) & (df["marst"].notnull()), "mar_widowed"] = 0
     df.loc[df["marst"] == 6, "mar_nevermar"] = 1
-    df.loc[(df["mar_nevermar"] != 1) & (df["marst"] != np.nan), "mar_nevermar"] = 0
+    df.loc[(df["mar_nevermar"] != 1) & (df["marst"].notnull()), "mar_nevermar"] = 0
     df.loc[df["educ"] <= 71, "ed_lessthanhs"] = 1
-    df.loc[(df["ed_lessthanhs"] != 1) & (df["educ"] != np.nan), "ed_lessthanhs"] = 0
+    df.loc[(df["ed_lessthanhs"] != 1) & (df["educ"].notnull()), "ed_lessthanhs"] = 0
     df.loc[df["educ"] == 73, "ed_highschool"] = 1
-    df.loc[(df["ed_highschool"] != 1) & (df["educ"] != np.nan), "ed_highschool"] = 0
+    df.loc[(df["ed_highschool"] != 1) & (df["educ"].notnull()), "ed_highschool"] = 0
     df.loc[df["educ"] == 81, "ed_somecollege"] = 1
-    df.loc[(df["ed_somecollege"] != 1) & (df["educ"] != np.nan), "ed_somecollege"] = 0
+    df.loc[(df["ed_somecollege"] != 1) & (df["educ"].notnull()), "ed_somecollege"] = 0
     df.loc[(df["educ"] == 91) | (df["educ"] == 92), "ed_assocdeg"] = 1
-    df.loc[(df["ed_assocdeg"] != 1) & (df["educ"] != np.nan), "ed_assocdeg"] = 0
+    df.loc[(df["ed_assocdeg"] != 1) & (df["educ"].notnull()), "ed_assocdeg"] = 0
     df.loc[df["educ"] == 111, "ed_bachdeg"] = 1
-    df.loc[(df["ed_bachdeg"] != 1) & (df["educ"] != np.nan), "ed_bachdeg"] = 0
+    df.loc[(df["ed_bachdeg"] != 1) & (df["educ"].notnull()), "ed_bachdeg"] = 0
     df.loc[df["educ"] > 111, "ed_advanceddeg"] = 1
-    df.loc[(df["ed_advanceddeg"] != 1) & (df["educ"] != np.nan), "ed_advanceddeg"] = 0
+    df.loc[(df["ed_advanceddeg"] != 1) & (df["educ"].notnull()), "ed_advanceddeg"] = 0
     df.loc[
         ((df["metro"] == 2) | (df["metro"] == 3)) & (df["metro"] != 0),
         "inornearmetro",
@@ -265,11 +262,15 @@ def clean_cps_wss(url_cps_wss):
         & (df["wsothshft"] != 98),
         "irreg_inconst",
     ] = 0
-    df.loc[(df["irreg_const"] == 1) | (df["irreg_inconst"] == 1), "irreg"] = 1
     df.loc[
-        (df["irreg"] != 1)
-        & (df["irreg_const"] != np.nan)
-        & (df["irreg_inconst"] != np.nan),
+        ((df["irreg_const"] == 1) | (df["irreg_inconst"] == 1))
+        & (df["irreg_const"].notnull())
+        & (df["irreg_inconst"].notnull()),
         "irreg",
-    ] = 0
+    ] = 1
+    df.loc[df["irreg"] != 1, "irreg"] = 0
+    df.loc[
+        (df["irreg_const"].isnull()) | (df["irreg_inconst"].isnull()),
+        "irreg",
+    ] = np.nan
     return df
