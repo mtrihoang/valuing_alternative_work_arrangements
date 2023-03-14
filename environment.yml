@@ -1,8 +1,8 @@
+---
 name: valuing_alternative_work_arrangements
 channels:
   - conda-forge
   - plotly
-
   - nodefaults
 
 dependencies:
@@ -17,9 +17,6 @@ dependencies:
   # Package dependencies
   - pytask>=0.2
   - pytask-latex>=0.2
-
-
-
 
   # Misc
   - black
@@ -38,7 +35,10 @@ dependencies:
   - statsmodels
   - python-graphviz
   - python-kaleido
-
+  - matplotlib
+  - scipy
+  - seaborn
+  - numpy
 
   - pip:
-    - -e .  # installs the project
+      - -e .  # installs the project
