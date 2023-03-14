@@ -1,7 +1,8 @@
 import numpy as np
+import pandas as pd
 
 
-def clean_cps_march2016(df):
+def clean_cps_march2016(url_cps_march2016):
     """Clean the cps_march2016 data.
 
     Args:
@@ -12,6 +13,7 @@ def clean_cps_march2016(df):
         df (pandas.DataFrame): The final cpsmarch2016 data.
 
     """
+    df = pd.read_stata(url_cps_march2016)
     df.loc[(df["gtcbsast"] == 2) | (df["gtcbsast"] == 1), "any_city"] = 1
     df.loc[df["pesex"] == 2, "female"] = 1
     df["female"] = df["female"].fillna(0)
@@ -81,7 +83,7 @@ def clean_cps_march2016(df):
     return df
 
 
-def clean_cps_wss(df):
+def clean_cps_wss(url_cps_wss):
     """Clean the cps_wss data.
 
     Args:
@@ -92,6 +94,7 @@ def clean_cps_wss(df):
         df (pandas.DataFrame): The final cps_wss data.
 
     """
+    df = pd.read_stata(url_cps_wss)
     df.loc[
         (df["wkstat"] == 12)
         | (df["wkstat"] == 21)
