@@ -5,7 +5,7 @@ from valuing_alternative_work_arrangements.data_management.clean_data import (
     clean_cps_wss,
 )
 
-url_cps_march2016 = "D:/Dropbox/epp/data1.dta"
+url_cps_march2016 = "Dropbox/epp/data1.dta"
 
 
 @pytask.mark.produces(BLD / "python" / "data" / "cpsmarch2016.csv")
@@ -25,7 +25,7 @@ def task_clean_cps_march2016(produces):
     data.to_csv(produces)
 
 
-url_clean_cps_wss = "D:/Dropbox/epp/data2.dta"
+url_clean_cps_wss = "Dropbox/epp/data2.dta"
 
 
 @pytask.mark.produces(BLD / "python" / "data" / "cps_wss.csv")
