@@ -77,7 +77,7 @@ for index, treatment_number in enumerate(TASK_FIGURES):
         ax.set_ylabel("Share choosing flexible schedule job")
         ax.legend(
             [
-                "Maximum likelihood logit",
+                "(Standard) maximum likelihood logit",
                 "Breakpoint model",
                 "Uncorrected for inattention",
                 "Corrected for inattention",
