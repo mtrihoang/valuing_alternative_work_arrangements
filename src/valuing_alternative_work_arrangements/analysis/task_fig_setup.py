@@ -7,7 +7,7 @@ from valuing_alternative_work_arrangements.analysis.breakpoint_program import (
     breakval_figs,
 )
 from valuing_alternative_work_arrangements.analysis.mle_programs import (
-    mylogit_mle2,
+    mylogit,
 )
 from valuing_alternative_work_arrangements.config import BLD, TASK_FIGURES
 
@@ -21,8 +21,9 @@ for index, treatment_number in enumerate(TASK_FIGURES):
     }
 
     @pytask.mark.task(id=treatment_number, kwargs=kwargs)
-    def fig_setup(produces, treatment_number):
-        """Replicate figures of Mas, Alexandre, and Amanda Pallais (2017).
+    def fig_setup_sd_logit(produces, treatment_number):
+        """Replicate figures of Mas, Alexandre, and Amanda Pallais (2017) associated
+        with (standard) logit models.
 
         Args:
             produces (str): The folder path contains outputs.
@@ -40,7 +41,7 @@ for index, treatment_number in enumerate(TASK_FIGURES):
             :,
         ]
         df_scatter = breakval_figs(df)
-        df_line = mylogit_mle2(df)
+        df_line = mylogit(df)
 
         fig, ax = plt.subplots()
 
