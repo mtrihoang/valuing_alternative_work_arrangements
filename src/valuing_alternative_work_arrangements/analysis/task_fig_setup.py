@@ -10,24 +10,28 @@ from valuing_alternative_work_arrangements.analysis.mle_programs import (
     mylogit,
     mylogit_mle2,
 )
-from valuing_alternative_work_arrangements.config import BLD, TASK_FIGURES
+from valuing_alternative_work_arrangements.config import (
+    BLD,
+    TASK_FIGURES_1,
+    TASK_FIGURES_2,
+)
 
 url_experimentdata = "https://www.dropbox.com/s/x9un4pkhd57vdei/experimentdata.dta?dl=1"
 
-for index, treatment_number in enumerate(TASK_FIGURES):
+for index, treatment_number in enumerate(TASK_FIGURES_1):
     index = index + 1
     kwargs = {
         "treatment_number": treatment_number,
-        "produces": BLD / "python" / "figures" / f"fig_{index}_standard_logit.png",
+        "produces_1": BLD / "python" / "figures" / f"fig_{index}_standard_logit.png",
     }
 
     @pytask.mark.task(id=treatment_number, kwargs=kwargs)
-    def fig_setup_sd_logit(produces, treatment_number):
+    def fig_setup_sd_logit(produces_1, treatment_number):
         """Replicate figures of Mas, Alexandre, and Amanda Pallais (2017) associated
         with (standard) logit models.
 
         Args:
-            produces (str): The folder path contains outputs.
+            produces_1 (str): The folder path contains outputs.
             treatment_number (int): The value of the treatment variable in list TASK_FIGURES.
 
         Returns:
@@ -87,26 +91,23 @@ for index, treatment_number in enumerate(TASK_FIGURES):
         )
         ax.set_title("WTP for flexible schedule")
 
-        fig.savefig(produces, dpi=1000)
+        fig.savefig(produces_1, dpi=1000)
 
 
-for index, treatment_number in enumerate(TASK_FIGURES):
+for index, treatment_number in enumerate(TASK_FIGURES_2):
     index = index + 1
     kwargs = {
         "treatment_number": treatment_number,
-        "produces": BLD
-        / "python"
-        / "figures"
-        / f"fig_{index}_error_corrected_logit.png",
+        "produces_2": BLD / "python" / "figures" / f"fig_{index}.png",
     }
 
     @pytask.mark.task(id=treatment_number, kwargs=kwargs)
-    def fig_setup_error_corrected_logit(produces, treatment_number):
+    def fig_setup_error_corrected_logit(produces_2, treatment_number):
         """Replicate figures of Mas, Alexandre, and Amanda Pallais (2017) associated
         with (error-corrected) logit models.
 
         Args:
-            produces (str): The folder path contains outputs.
+            produces_2 (str): The folder path contains outputs.
             treatment_number (int): The value of the treatment variable in list TASK_FIGURES.
 
         Returns:
@@ -166,4 +167,4 @@ for index, treatment_number in enumerate(TASK_FIGURES):
         )
         ax.set_title("WTP for flexible schedule")
 
-        fig.savefig(produces, dpi=1000)
+        fig.savefig(produces_2, dpi=1000)
