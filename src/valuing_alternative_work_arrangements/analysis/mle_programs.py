@@ -85,7 +85,7 @@ def mylogit(df):
     return logit_fit_df
 
 
-class CustomLogit(sm.Logit):
+class NewLikelihood(sm.Logit):
     """Define likelihood functions for error-corrected maximum likelihood logit model,
     following Mas, Alexandre, and Amanda Pallais (2017).
 
@@ -151,7 +151,7 @@ def mylogit_mle2(df):
     y = df["chose_position1"]
     X = df[["wagegap"]]
     X = sm.add_constant(X)
-    model = CustomLogit(endog=y, exog=X, error=error)
+    model = NewLikelihood(endog=y, exog=X, error=error)
     result = model.fit(method="newton", cov_type="HC3", maxiter=100)
     lfit = result.predict(X, linear=True)
     prop_fit_temp = expit(lfit)
