@@ -48,7 +48,7 @@ for index, treatment_number in enumerate(TASK_FIGURES):
         df_line = mylogit(df)
 
         fig, ax = plt.subplots()
-
+        ax = sns.set_style("darkgrid")
         ax = sns.lineplot(data=df_line, x="rev_wagegap", y="lnf", color="black")
         ax = sns.scatterplot(
             data=df_scatter,
@@ -126,7 +126,7 @@ for index, treatment_number in enumerate(TASK_FIGURES):
         df_line = mylogit_mle2(df)
 
         fig, ax = plt.subplots()
-
+        ax = sns.set_style("darkgrid")
         ax = sns.lineplot(data=df_line, x="rev_wagegap", y="lnf", color="black")
         ax = sns.scatterplot(
             data=df_scatter,
