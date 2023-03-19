@@ -12,7 +12,7 @@ def me_correction(df):
 
     Returns:
     -------
-        mm1 (pandas.DataFrame): Contain appropriate error rate for mylogit_mle2.
+        mm1 (pandas.DataFrame): Contain appropriate error rate for mylogit.
 
     """
     mm1 = df.sort_values(["wagegap"])
@@ -56,9 +56,9 @@ def me_correction(df):
     return mm1
 
 
-def mylogit_mle2(df):
+def mylogit(df):
     """Apply the maximum likelihood estimation method to estimate the parameters of the
-    logistic regression model.
+    (standard) logistic regression model.
 
     Args:
         df (pandas.DataFrame): The experimentdata data.
