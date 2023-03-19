@@ -17,7 +17,7 @@ for index, treatment_number in enumerate(TASK_FIGURES):
     index = index + 1
     kwargs = {
         "treatment_number": treatment_number,
-        "produces": BLD / "python" / "figures" / f"fig_{index}.png",
+        "produces": BLD / "python" / "figures" / f"fig_{index}_standard_logit.png",
     }
 
     @pytask.mark.task(id=treatment_number, kwargs=kwargs)
