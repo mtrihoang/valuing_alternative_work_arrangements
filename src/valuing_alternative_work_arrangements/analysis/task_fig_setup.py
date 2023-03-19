@@ -11,7 +11,7 @@ from valuing_alternative_work_arrangements.analysis.mle_programs import (
 )
 from valuing_alternative_work_arrangements.config import BLD, TASK_FIGURES
 
-url_experimentdata = "D:/Dropbox/epp/experimentdata.dta"
+url_experimentdata = "https://www.dropbox.com/s/x9un4pkhd57vdei/experimentdata.dta?dl=1"
 
 for index, treatment_number in enumerate(TASK_FIGURES):
     index = index + 1
