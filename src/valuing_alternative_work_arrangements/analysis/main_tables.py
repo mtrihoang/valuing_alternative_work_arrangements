@@ -14,7 +14,7 @@ def table_1(df):
 
     Returns:
     -------
-        table_1 (pandas.DataFrame): Contain estimates for compensating differentials from the observational data using weekly earnings.
+        coef_df (pandas.DataFrame): Contain estimates for compensating differentials from the observational data using weekly earnings.
 
     """
     prefix = ["race_", "ed_", "mar_"]
