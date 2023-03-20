@@ -28,7 +28,7 @@ def task_clean_cps_march2016(produces):
 url_clean_cps_wss = "https://www.dropbox.com/s/7u8g1nfym2imfbm/data2.dta?dl=1"
 
 
-@pytask.mark.produces(BLD / "python" / "data" / "cps_wss.csv")
+@pytask.mark.produces(BLD / "python" / "data" / "cpswss.csv")
 def task_clean_cps_wss(produces):
     """Clean the cps_wss data from the Dropbox link and save it into the bld folder.
 
