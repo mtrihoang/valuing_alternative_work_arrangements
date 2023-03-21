@@ -51,4 +51,16 @@ DUMMY_VARS = [
     "irreg",
 ]
 
+DATA_FILES = [
+    "cps_march2016",
+    "cps_wss",
+    "experiment_age",
+    "experiment_education",
+    "experiment_employmentstatus",
+    "experiment_race",
+    "experimentdata",
+    "survey_wave1",
+    "survey_wave2",
+]
+
 __all__ = ["BLD", "SRC", "TEST_DIR", "TASK_FIGURES", "DUMMY_VARS"]
