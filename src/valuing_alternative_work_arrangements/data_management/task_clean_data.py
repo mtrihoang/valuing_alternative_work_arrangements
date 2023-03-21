@@ -1,9 +1,39 @@
+import pandas as pd
 import pytask
-from valuing_alternative_work_arrangements.config import BLD
+from valuing_alternative_work_arrangements.config import (
+    BLD,
+    DATA_FILES,
+    DROPBOX_URL,
+)
 from valuing_alternative_work_arrangements.data_management.clean_data import (
     clean_cps_march2016,
     clean_cps_wss,
 )
+
+for index, data_file in enumerate(DATA_FILES):
+
+    kwargs = {
+        "index": index,
+        "produces": BLD / "python" / "data" / f"{data_file}.pkl",
+    }
+
+    @pytask.mark.task(id=index, kwargs=kwargs)
+    def task_import_data(produces, index):
+        """Import the CPS Work Schedules Supplement and experimental data files and save
+        to the bld folder.
+
+        Args:
+            produces (str): The folder path where CPS and experimental data files are stored.
+            index (int): the pytask index.
+
+        Returns:
+        -------
+            The CPS and experimental datasets.
+
+        """
+        df = pd.read_stata(DROPBOX_URL[index])
+        df.to_pickle(produces)
+
 
 url_cps_march2016 = "https://www.dropbox.com/s/ri1mq4859sngizx/cps_march2016.dta?dl=1"
 
