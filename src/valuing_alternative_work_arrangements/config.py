@@ -51,4 +51,4 @@ DUMMY_VARS = [
     "irreg",
 ]
 
-__all__ = ["BLD", "SRC", "TEST_DIR", "GROUPS"]
+__all__ = ["BLD", "SRC", "TEST_DIR", "TASK_FIGURES", "DUMMY_VARS"]
