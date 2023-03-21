@@ -63,4 +63,16 @@ DATA_FILES = [
     "survey_wave2",
 ]
 
+DROPBOX_URL = [
+    "https://www.dropbox.com/s/ri1mq4859sngizx/cps_march2016.dta?dl=1",
+    "https://www.dropbox.com/s/8r70kj4qxda61vh/cps_wss.dta?dl=1",
+    "https://www.dropbox.com/s/kiqu9ti8cj7nrgq/experiment_age.dta?dl=1",
+    "https://www.dropbox.com/s/0wvxtshpx60c862/experiment_education.dta?dl=1",
+    "https://www.dropbox.com/s/8u2kwr5wyjzn8i6/experiment_employmentstatus.dta?dl=1",
+    "https://www.dropbox.com/s/lryhd5u4991w4zn/experiment_race.dta?dl=1",
+    "https://www.dropbox.com/s/x9un4pkhd57vdei/experimentdata.dta?dl=1",
+    "https://www.dropbox.com/s/wyei613o0m09s16/survey_wave1.dta?dl=1",
+    "https://www.dropbox.com/s/26ymj2ek3mvmty6/survey_wave2.dta?dl=1",
+]
+
 __all__ = ["BLD", "SRC", "TEST_DIR", "TASK_FIGURES", "DUMMY_VARS"]
