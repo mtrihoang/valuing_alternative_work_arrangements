@@ -75,4 +75,20 @@ DROPBOX_URL = [
     "https://www.dropbox.com/s/26ymj2ek3mvmty6/survey_wave2.dta?dl=1",
 ]
 
-__all__ = ["BLD", "SRC", "TEST_DIR", "TASK_FIGURES", "DUMMY_VARS"]
+EXPERIMENTAL_DATA = [
+    "experiment_age",
+    "experiment_education",
+    "experiment_employmentstatus",
+    "experiment_race",
+]
+
+__all__ = [
+    "BLD",
+    "SRC",
+    "TEST_DIR",
+    "PAPER_DIR",
+    "TASK_FIGURES",
+    "DUMMY_VARS",
+    "DATA_FILES",
+    "EXPERIMENTAL_DATA",
+]
