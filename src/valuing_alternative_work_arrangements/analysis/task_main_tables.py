@@ -9,8 +9,8 @@ from valuing_alternative_work_arrangements.config import (
 )
 
 
-@pytask.mark.depends_on(BLD / "python" / "data" / "cpswss.csv")
-@pytask.mark.produces(BLD / "python" / "tables" / "table_1.csv")
+@pytask.mark.depends_on(BLD / "python" / "data" / "cpswss.pkl")
+@pytask.mark.produces(BLD / "python" / "tables" / "table_1.pkl")
 def task_create_table_1(depends_on, produces):
     """Replicate table 1 of Mas, Alexandre, and Amanda Pallais (2017).
 
@@ -23,13 +23,13 @@ def task_create_table_1(depends_on, produces):
         coef_df (pandas.DataFrame): Table 1.
 
     """
-    df = pd.read_csv(depends_on)
+    df = pd.read_pickle(depends_on)
     coef_df = table_1(df)
-    coef_df.to_csv(produces)
+    coef_df.to_pickle(produces)
 
 
-@pytask.mark.depends_on(BLD / "python" / "data" / "cpswss.csv")
-@pytask.mark.produces(BLD / "python" / "tables" / "dummy_vars_cpswss.csv")
+@pytask.mark.depends_on(BLD / "python" / "data" / "cpswss.pkl")
+@pytask.mark.produces(BLD / "python" / "tables" / "dummy_vars_cpswss.pkl")
 def task_freq_dummy_vars(depends_on, produces):
     """Generate a summary table with frequency of dummy variables.
 
@@ -42,8 +42,8 @@ def task_freq_dummy_vars(depends_on, produces):
         freq_df (pandas.DataFrame): The table contains frequencies of dummy variables.
 
     """
-    df = pd.read_csv(depends_on)
+    df = pd.read_pickle(depends_on)
     freq_df = pd.DataFrame()
     for var in DUMMY_VARS:
         freq_df = freq_df.append(df[var].value_counts().to_frame().T)
-    freq_df.to_csv(produces)
+    freq_df.to_pickle(produces)
