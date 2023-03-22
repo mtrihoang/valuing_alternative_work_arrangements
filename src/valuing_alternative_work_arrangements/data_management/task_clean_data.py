@@ -38,7 +38,7 @@ for index, data_file in enumerate(DATA_FILES):
 url_cps_march2016 = "https://www.dropbox.com/s/ri1mq4859sngizx/cps_march2016.dta?dl=1"
 
 
-@pytask.mark.produces(BLD / "python" / "data" / "cpsmarch2016.csv")
+@pytask.mark.produces(BLD / "python" / "data" / "cpsmarch2016.pkl")
 def task_clean_cps_march2016(produces):
     """Clean the cps_march2016 data from the Dropbox link and save it into the bld
     folder.
@@ -52,13 +52,13 @@ def task_clean_cps_march2016(produces):
 
     """
     data = clean_cps_march2016(url_cps_march2016)
-    data.to_csv(produces)
+    data.to_pickle(produces)
 
 
 url_clean_cps_wss = "https://www.dropbox.com/s/8r70kj4qxda61vh/cps_wss.dta?dl=1"
 
 
-@pytask.mark.produces(BLD / "python" / "data" / "cpswss.csv")
+@pytask.mark.produces(BLD / "python" / "data" / "cpswss.pkl")
 def task_clean_cps_wss(produces):
     """Clean the cps_wss data from the Dropbox link and save it into the bld folder.
 
@@ -71,4 +71,4 @@ def task_clean_cps_wss(produces):
 
     """
     data = clean_cps_wss(url_clean_cps_wss)
-    data.to_csv(produces)
+    data.to_pickle(produces)
