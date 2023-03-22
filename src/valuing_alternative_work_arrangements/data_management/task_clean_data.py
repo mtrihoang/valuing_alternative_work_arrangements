@@ -4,6 +4,7 @@ from valuing_alternative_work_arrangements.config import (
     BLD,
     DATA_FILES,
     DROPBOX_URL,
+    EXPERIMENTAL_DATA,
 )
 from valuing_alternative_work_arrangements.data_management.clean_data import (
     clean_cps_march2016,
@@ -72,3 +73,35 @@ def task_clean_cps_wss(produces):
     """
     data = clean_cps_wss(url_clean_cps_wss)
     data.to_pickle(produces)
+
+
+@pytask.mark.depends_on(
+    {
+        "experimentdata": BLD / "python" / "data" / "experimentdata.pkl",
+        "experiment_age": BLD / "python" / "data" / "experiment_age.pkl",
+        "experiment_education": BLD / "python" / "data" / "experiment_education.pkl",
+        "experiment_employmentstatus": BLD
+        / "python"
+        / "data"
+        / "experiment_employmentstatus.pkl",
+        "experiment_race": BLD / "python" / "data" / "experiment_race.pkl",
+    },
+)
+@pytask.mark.produces(BLD / "python" / "data" / "experiment_all.pkl")
+def task_append_data(depends_on, produces):
+    """Append experimental data files into a single file.
+
+    Args:
+        depends_on: The (individual) experimental data.
+        produces: Specify the folder path where the appended data will be located in.
+
+    Returns:
+    -------
+        The (appended) experimental data.
+
+    """
+    df = pd.read_pickle(depends_on[EXPERIMENTAL_DATA[0]])
+    for experiment in EXPERIMENTAL_DATA[1:]:
+        df_experiment = pd.read_pickle(depends_on[experiment])
+        df = df.append(df_experiment)
+    df.to_pickle(produces)
