@@ -76,6 +76,7 @@ DROPBOX_URL = [
 ]
 
 EXPERIMENTAL_DATA = [
+    "experimentdata",
     "experiment_age",
     "experiment_education",
     "experiment_employmentstatus",
