@@ -39,7 +39,6 @@ dependencies:
   - scipy
   - seaborn
   - numpy
-  - bootstrapped
 
   - pip:
       - -e .  # installs the project
