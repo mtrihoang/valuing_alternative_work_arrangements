@@ -85,6 +85,14 @@ EXPERIMENTAL_DATA = [
     "experiment_race",
 ]
 
+TABLE_3 = {
+    1: "experiment_all",
+    2: "cpsmarch2016_1",
+    3: "cpsmarch2016_2",
+    4: "survey_wave1",
+    5: "cpsmarch2016",
+}
+
 __all__ = [
     "BLD",
     "SRC",

@@ -2,10 +2,12 @@ import pandas as pd
 import pytask
 from valuing_alternative_work_arrangements.analysis.main_tables import (
     table_1,
+    table_3,
 )
 from valuing_alternative_work_arrangements.config import (
     BLD,
     DUMMY_VARS,
+    TABLE_3,
 )
 
 
@@ -47,3 +49,47 @@ def task_freq_dummy_vars(depends_on, produces):
     for var in DUMMY_VARS:
         freq_df = freq_df.append(df[var].value_counts().to_frame().T)
     freq_df.to_pickle(produces)
+
+
+@pytask.mark.depends_on(
+    {
+        1: BLD / "python" / "data" / "experiment_all.pkl",
+        2: BLD / "python" / "data" / "cpsmarch2016.pkl",
+        3: BLD / "python" / "data" / "cpsmarch2016.pkl",
+        4: BLD / "python" / "data" / "survey_wave1.pkl",
+        5: BLD / "python" / "data" / "cpsmarch2016.pkl",
+    },
+)
+@pytask.mark.produces(BLD / "python" / "tables" / "table_3.pkl")
+def task_create_table_3(depends_on, produces):
+    """Replicate each column of table 3 of Mas, Alexandre, and Amanda Pallais (2017).
+
+    Args:
+        depends_on (str): The experimentdata data.
+        produces (str): The folder path contains the descriptive statistics table.
+
+    Returns:
+    -------
+        stat_df (pandas.DataFrame): Table 3.
+
+    """
+    for col, data in TABLE_3.items():
+        globals()[f"{data}"] = pd.read_pickle(depends_on[col])
+        if col == 2:
+            globals()[f"{data}"] = globals()[f"{data}"].loc[
+                (globals()[f"{data}"]).callcenterworker == 1,
+                :,
+            ]
+        elif col == 3:
+            globals()[f"{data}"] = globals()[f"{data}"].loc[
+                ((globals()[f"{data}"]).callcenterworker == 1)
+                & ((globals()[f"{data}"]).any_city == 1),
+                :,
+            ]
+        globals()[f"{data}"] = table_3(globals()[f"{data}"])
+
+    name_list = []
+    for name_df in TABLE_3.values():
+        name_list.append(eval(name_df))
+    stat_df = pd.concat(name_list, axis=1)
+    stat_df.to_pickle(produces)

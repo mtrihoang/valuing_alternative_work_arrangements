@@ -4,6 +4,9 @@ import numpy as np
 import pandas as pd
 import statsmodels.formula.api as smf
 from statsmodels.iolib.summary2 import summary_col
+from valuing_alternative_work_arrangements.config import (
+    PREFIX,
+)
 
 
 def table_1(df):
@@ -17,8 +20,7 @@ def table_1(df):
         coef_df (pandas.DataFrame): Contain estimates for compensating differentials from the observational data using weekly earnings.
 
     """
-    prefix = ["race_", "ed_", "mar_"]
-    prefix_var = [df.columns[df.columns.str.startswith(i)].tolist() for i in prefix]
+    prefix_var = [df.columns[df.columns.str.startswith(i)].tolist() for i in PREFIX]
     prefix_var = list(itertools.chain(*prefix_var))
     xvar = [
         "flexhrs",
@@ -81,17 +83,17 @@ def table_3(df):
     """Replicate table 3 of Mas, Alexandre, and Amanda Pallais (2017).
 
     Args:
-        df (pandas.DataFrame): The cpswss data.
+        depends_on (str): The experimentdata data.
+        produces (str): The folder path contains the descriptive statistics table.
 
     Returns:
     -------
-        table_3 (pandas.DataFrame): Contain descriptive statistics of Experiment, UAS, and Comparison Samples.
+        stat_df (pandas.DataFrame): Table 3.
 
     """
-    prefix = ["emp_", "age_", "ed_", "race_"]
-    prefix_var = [df.columns[df.columns.str.startswith(i)].tolist() for i in prefix]
+    prefix_var = [df.columns[df.columns.str.startswith(i)].tolist() for i in PREFIX]
     prefix_var = list(itertools.chain(*prefix_var))
     prefix_var = ["female", *prefix_var]
     stat_df = df[prefix_var].describe().T
-    table_3 = round(stat_df[["mean"]] * 100)
-    return table_3
+    stat_df = round(stat_df[["mean"]] * 100)
+    return stat_df
