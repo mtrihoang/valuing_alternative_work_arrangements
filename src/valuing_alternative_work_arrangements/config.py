@@ -9,6 +9,8 @@ PAPER_DIR = SRC.joinpath("..", "..", "paper").resolve()
 
 TASK_FIGURES = [1, 4, 3, 5, 2]
 
+PREFIX = ["emp_", "age_", "ed_", "race_"]
+
 DUMMY_VARS = [
     "emp_pt",
     "female",
@@ -89,7 +91,9 @@ __all__ = [
     "TEST_DIR",
     "PAPER_DIR",
     "TASK_FIGURES",
+    "PREFIX",
     "DUMMY_VARS",
     "DATA_FILES",
+    "DROPBOX_URL",
     "EXPERIMENTAL_DATA",
 ]
