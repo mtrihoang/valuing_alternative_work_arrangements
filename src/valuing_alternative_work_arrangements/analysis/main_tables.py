@@ -1,9 +1,13 @@
 import itertools
+import random
 
 import numpy as np
 import pandas as pd
 import statsmodels.formula.api as smf
 from statsmodels.iolib.summary2 import summary_col
+from valuing_alternative_work_arrangements.analysis.mle_programs import (
+    mylogit_mle2,
+)
 from valuing_alternative_work_arrangements.config import (
     PREFIX,
 )
@@ -83,8 +87,7 @@ def table_3(df):
     """Replicate table 3 of Mas, Alexandre, and Amanda Pallais (2017).
 
     Args:
-        depends_on (str): The experimentdata data.
-        produces (str): The folder path contains the descriptive statistics table.
+        df (pandas.DataFrame): The experimentdata data.
 
     Returns:
     -------
@@ -97,3 +100,80 @@ def table_3(df):
     stat_df = df[prefix_var].describe().T
     stat_df = round(stat_df[["mean"]] * 100)
     return stat_df
+
+
+def table5(df):
+    """Replicate table 5 of Mas, Alexandre, and Amanda Pallais (2017).
+
+    Args:
+        df (pandas.DataFrame): The experimentdata data.
+
+    Returns:
+    -------
+        table5 (pandas.DataFrame): Table 5.
+
+    """
+    reps = 10
+    for t in [1, 4, 3, 5, 2]:
+        globals()[f"bstrapresults{t}"] = pd.DataFrame(index=range(1), columns=range(6))
+        globals()[f"bstrapresults{t}"].columns = [
+            "treatment",
+            "mean",
+            "sd",
+            "p25",
+            "p50",
+            "p75",
+        ]
+        globals()[f"pointestimates{t}"] = pd.DataFrame(index=range(1), columns=range(6))
+        globals()[f"pointestimates{t}"].columns = [
+            "treatment",
+            "mean",
+            "sd",
+            "p25",
+            "p50",
+            "p75",
+        ]
+        random.seed(91857785)
+        convergencecounter = 0
+        expdata = df.loc[df.treatment_number == t, :]
+        for j in list(range(1, reps + 1)):
+            if convergencecounter < 500:
+                runresults = pd.DataFrame(index=range(1), columns=range(6))
+                runresults.columns = ["treatment", "mean", "sd", "p25", "p50", "p75"]
+                runresults.iloc[0, 0] = t
+                bsample = expdata.sample(frac=1, replace=True) if j != 1 else expdata
+                bsample = bsample.reset_index()
+                ml = mylogit_mle2(bsample)
+                converged = ml.converged.mean()
+                const = ml.const.mean()
+                wagegap = ml.wagegap.mean()
+                if converged is True:
+                    runresults.iloc[0, 1] = -const / wagegap
+                    runresults.iloc[0, 2] = -1 / (wagegap * 0.5516)
+                    runresults.iloc[0, 3] = (
+                        np.log(0.75 / (1 - 0.75)) - const
+                    ) / wagegap
+                    runresults.iloc[0, 4] = (np.log(0.5 / (1 - 0.5)) - const) / wagegap
+                    runresults.iloc[0, 5] = (
+                        np.log(0.25 / (1 - 0.25)) - const
+                    ) / wagegap
+                if j == 1:
+                    globals()[f"pointestimates{t}"] = runresults
+                else:
+                    globals()[f"bstrapresults{t}"] = pd.concat(
+                        [(globals()[f"bstrapresults{t}"]), runresults],
+                    )
+                convergencecounter += 1
+    tablecode = pd.DataFrame(index=range(1), columns=range(6))
+    tablecode.columns = ["treatment", "mean", "sd", "p25", "p50", "p75"]
+    for t in [1, 4, 3, 5, 2]:
+        globals()[f"se{t}"] = (
+            globals()[f"bstrapresults{t}"]
+            .groupby(["treatment"])["mean", "sd", "p25", "p50", "p75"]
+            .agg("std")
+        )
+        tablecode = pd.concat(
+            [tablecode, globals()[f"pointestimates{t}"], globals()[f"se{t}"]],
+        )
+    table5 = tablecode
+    return table5
