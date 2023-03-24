@@ -1,9 +1,9 @@
 import pandas as pd
 import pytask
 from valuing_alternative_work_arrangements.analysis.main_tables import (
-    table5,
     table_1,
     table_3,
+    table_5,
 )
 from valuing_alternative_work_arrangements.config import (
     BLD,
@@ -111,5 +111,5 @@ def task_create_table_5(depends_on, produces):
 
     """
     df = pd.read_pickle(depends_on)
-    table5_wtp = table5(df)
+    table5_wtp = table_5(df)
     table5_wtp.to_pickle(produces)
