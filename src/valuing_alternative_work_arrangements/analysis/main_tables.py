@@ -175,5 +175,5 @@ def table5(df):
         tablecode = pd.concat(
             [tablecode, globals()[f"pointestimates{t}"], globals()[f"se{t}"]],
         )
-    table5 = tablecode
+    table5 = tablecode.dropna(subset=["mean", "sd", "p25", "p50", "p75"]).reset_index()
     return table5
