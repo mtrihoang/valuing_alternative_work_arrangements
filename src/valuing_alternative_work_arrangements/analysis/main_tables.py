@@ -102,7 +102,7 @@ def table_3(df):
     return stat_df
 
 
-def table5(df):
+def table_5(df):
     """Replicate table 5 of Mas, Alexandre, and Amanda Pallais (2017).
 
     Args:
