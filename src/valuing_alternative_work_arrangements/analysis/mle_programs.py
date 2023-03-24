@@ -153,6 +153,8 @@ def mylogit_mle2(df):
     X = sm.add_constant(X)
     model = NewLikelihood(endog=y, exog=X, error=error)
     result = model.fit(method="newton", cov_type="HC3", maxiter=100)
+    num_mle_iterations = result.mle_retvals["iterations"]
+    converged = result.mle_retvals["converged"]
     lfit = result.predict(X, linear=True)
     prop_fit_temp = expit(lfit)
     prop_fit = (prop_fit_temp - error) / (1 - 2 * error)
@@ -164,4 +166,8 @@ def mylogit_mle2(df):
     logit_fit_df = logit_fit_df.sort_values("rev_wagegap")
     logit_fit_df["llf"] = result.llf
     logit_fit_df["error"] = error
+    logit_fit_df["num_mle_iterations"] = num_mle_iterations
+    logit_fit_df["converged"] = converged
+    logit_fit_df["const"] = result.params[0]
+    logit_fit_df["wagegap"] = result.params[1]
     return logit_fit_df
