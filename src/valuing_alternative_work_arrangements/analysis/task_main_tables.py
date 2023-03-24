@@ -1,6 +1,7 @@
 import pandas as pd
 import pytask
 from valuing_alternative_work_arrangements.analysis.main_tables import (
+    table5,
     table_1,
     table_3,
 )
@@ -93,3 +94,22 @@ def task_create_table_3(depends_on, produces):
         name_list.append(eval(name_df))
     stat_df = pd.concat(name_list, axis=1)
     stat_df.to_pickle(produces)
+
+
+@pytask.mark.depends_on(BLD / "python" / "data" / "experimentdata.pkl")
+@pytask.mark.produces(BLD / "python" / "tables" / "table_5.pkl")
+def task_create_table_5(depends_on, produces):
+    """Replicate table 5 of Mas, Alexandre, and Amanda Pallais (2017).
+
+    Args:
+        depends_on (str): The experimentdata data.
+        produces (str): The folder path contains table 5.
+
+    Returns:
+    -------
+        table5_wtp (pandas.DataFrame): Table 5.
+
+    """
+    df = pd.read_pickle(depends_on)
+    table5_wtp = table5(df)
+    table5_wtp.to_pickle(produces)
