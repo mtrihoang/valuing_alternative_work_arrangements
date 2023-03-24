@@ -110,7 +110,7 @@ def table5(df):
 
     Returns:
     -------
-        table5 (pandas.DataFrame): Table 5.
+        wtp_df (pandas.DataFrame): Table 5.
 
     """
     reps = 500
@@ -175,5 +175,5 @@ def table5(df):
         tablecode = pd.concat(
             [tablecode, globals()[f"pointestimates{t}"], globals()[f"se{t}"]],
         )
-    table5 = tablecode.dropna(subset=["mean", "sd", "p25", "p50", "p75"]).reset_index()
-    return table5
+    wtp_df = tablecode.dropna(subset=["mean", "sd", "p25", "p50", "p75"]).reset_index()
+    return wtp_df
