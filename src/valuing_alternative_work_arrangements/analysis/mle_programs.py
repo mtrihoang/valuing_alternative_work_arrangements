@@ -3,6 +3,7 @@ import pandas as pd
 import statsmodels.api as sm
 import statsmodels.formula.api as smf
 from scipy.special import expit
+from statsmodels.base.model import GenericLikelihoodModel
 
 
 def me_correction(df):
@@ -85,7 +86,7 @@ def mylogit(df):
     return logit_fit_df
 
 
-class NewLikelihood(sm.Logit):
+class Newlikelihood(GenericLikelihoodModel):
     """Define likelihood functions for error-corrected maximum likelihood logit model,
     following Mas, Alexandre, and Amanda Pallais (2017).
 
@@ -106,9 +107,37 @@ class NewLikelihood(sm.Logit):
         super().__init__(endog, exog)
         self.error = error
 
+    def loglikeobs(self, params):
+        """Estimate the log-likelihood of model for all observations at params,
+        associated with the error-corrected maximum likelihood logit model.
+
+        Args:
+            params (pandas.Series): The logit coefficients generated from sm.Logit().
+
+        Returns:
+        -------
+            llf_obs (pandas.Series): The value of the log likelihood function.
+
+        """
+        X = self.exog
+        y = self.endog
+        Xb = X @ params
+        error = self.error
+        llf_obs = Xb
+        llf_obs = np.log(llf_obs)
+        llf_obs[y == 1] = np.log(
+            expit(Xb[y == 1]) * (1 - error[y == 1])
+            + (1 - expit(Xb[y == 1])) * error[y == 1],
+        )
+        llf_obs[y == 0] = np.log(
+            expit(Xb[y == 0]) * (error[y == 0])
+            + (1 - expit(Xb[y == 0])) * (1 - error[y == 0]),
+        )
+        return llf_obs
+
     def loglike(self, params):
-        """Estimate the log likelihood function associated with the error-corrected
-        maximum likelihood logit model.
+        """Estimate the log-likelihood of model at params, associated with the error-
+        corrected maximum likelihood logit model.
 
         Args:
             params (pandas.Series): The logit coefficients generated from sm.Logit().
@@ -118,19 +147,42 @@ class NewLikelihood(sm.Logit):
             llf (float): The value of the log likelihood function.
 
         """
-        lin_pred = self.exog.dot(params)
-        llf = self.endog
-        llf[self.endog == 1] = np.log(
-            expit(lin_pred[self.endog == 1]) * (1 - self.error[self.endog == 1])
-            + (1 - expit(lin_pred[self.endog == 1])) * self.error[self.endog == 1],
-        )
-        llf[self.endog == 0] = np.log(
-            expit(lin_pred[self.endog == 0]) * (self.error[self.endog == 0])
-            + (1 - expit(lin_pred[self.endog == 0]))
-            * (1 - self.error[self.endog == 0]),
-        )
-        llf = np.sum(llf)
+        llf_obs = self.loglikeobs(params)
+        llf = np.sum(llf_obs)
         return llf
+
+    def nloglike(self, params):
+        """Estimate the negative log-likelihood of model at params, associated with the
+        error-corrected maximum likelihood logit model.
+
+        Args:
+            params (pandas.Series): The logit coefficients generated from sm.Logit().
+
+        Returns:
+        -------
+            nllf (float): The value of the negative log likelihood function.
+
+        """
+        llf = self.loglike(params)
+        nllf = -llf
+        return nllf
+
+    def predict(self, params, exog):
+        """Estimate the negative log-likelihood of model at params, associated with the
+        error-corrected maximum likelihood logit model.
+
+        Args:
+            params (pandas.Series): The logit coefficients generated from sm.Logit().
+            exog (pandas.DataFrame): The dataframe of exogenous variables.
+
+        Returns:
+        -------
+            nllf (float): The value of the negative log likelihood function.
+
+        """
+        X = self.exog
+        Xb = X @ params
+        return Xb
 
 
 def mylogit_mle2(df):
@@ -151,15 +203,12 @@ def mylogit_mle2(df):
     y = df["chose_position1"]
     X = df[["wagegap"]]
     X = sm.add_constant(X)
-    model = NewLikelihood(endog=y, exog=X, error=error)
+    model = Newlikelihood(endog=y, exog=X, error=error)
     result = model.fit(method="newton", cov_type="HC3", maxiter=100)
     num_mle_iterations = result.mle_retvals["iterations"]
     converged = result.mle_retvals["converged"]
-    lfit = result.predict(X, linear=True)
-    prop_fit_temp = expit(lfit)
-    prop_fit = (prop_fit_temp - error) / (1 - 2 * error)
-    prop_fit[(prop_fit < 0)] = 0
-    prop_fit[(prop_fit > 1)] = 1
+    lfit = result.predict(X)
+    prop_fit = 1 / (1 + np.exp(-lfit))
     rev_wagegap = -X["wagegap"]
     logit_fit_df = pd.concat([rev_wagegap, prop_fit], axis=1)
     logit_fit_df = logit_fit_df.rename(columns={"wagegap": "rev_wagegap", 0: "lnf"})
