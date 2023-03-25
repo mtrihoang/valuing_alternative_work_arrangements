@@ -102,7 +102,7 @@ def table_3(df):
     return stat_df
 
 
-def table_5(df):
+def table_5_and_7(df, treatment):
     """Replicate table 5 of Mas, Alexandre, and Amanda Pallais (2017).
 
     Args:
@@ -114,7 +114,7 @@ def table_5(df):
 
     """
     reps = 100
-    for t in [1, 4, 3, 5, 2]:
+    for t in treatment:
         globals()[f"bstrapresults{t}"] = pd.DataFrame(index=range(1), columns=range(6))
         globals()[f"bstrapresults{t}"].columns = [
             "treatment",
@@ -166,7 +166,7 @@ def table_5(df):
                 convergencecounter += 1
     tablecode = pd.DataFrame(index=range(1), columns=range(6))
     tablecode.columns = ["treatment", "mean", "sd", "p25", "p50", "p75"]
-    for t in [1, 4, 3, 5, 2]:
+    for t in treatment:
         globals()[f"se{t}"] = (
             globals()[f"bstrapresults{t}"]
             .groupby(["treatment"])["mean", "sd", "p25", "p50", "p75"]
