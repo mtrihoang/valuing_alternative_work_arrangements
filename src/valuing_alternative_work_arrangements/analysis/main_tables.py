@@ -147,7 +147,7 @@ def table_5(df):
                 converged = ml.converged.mean()
                 const = ml.const.mean()
                 wagegap = ml.wagegap.mean()
-                if converged is True:
+                if converged == 1:
                     runresults.iloc[0, 1] = -const / wagegap
                     runresults.iloc[0, 2] = -1 / (wagegap * 0.5516)
                     runresults.iloc[0, 3] = (
