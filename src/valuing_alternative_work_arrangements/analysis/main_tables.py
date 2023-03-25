@@ -152,27 +152,34 @@ def table_5_and_7(df, treatment_list):
                     else expdata
                 )
                 bsample = bsample.reset_index()
-                ml = mylogit_mle2(bsample)
-                converged = ml.converged.mean()
-                const = ml.const.mean()
-                wagegap = ml.wagegap.mean()
-                if converged == 1:
-                    runresults.iloc[0, 1] = -const / wagegap
-                    runresults.iloc[0, 2] = -1 / (wagegap * 0.5516)
-                    runresults.iloc[0, 3] = (
-                        np.log(0.75 / (1 - 0.75)) - const
-                    ) / wagegap
-                    runresults.iloc[0, 4] = (np.log(0.5 / (1 - 0.5)) - const) / wagegap
-                    runresults.iloc[0, 5] = (
-                        np.log(0.25 / (1 - 0.25)) - const
-                    ) / wagegap
-                if j == 1:
-                    globals()[f"pointestimates{t}"] = runresults
-                else:
-                    globals()[f"bstrapresults{t}"] = pd.concat(
-                        [(globals()[f"bstrapresults{t}"]), runresults],
-                    )
-                convergencecounter += 1
+
+                try:
+                    ml = mylogit_mle2(bsample)
+                    converged = ml.converged.mean()
+                    const = ml.const.mean()
+                    wagegap = ml.wagegap.mean()
+                    if converged == 1:
+                        runresults.iloc[0, 1] = -const / wagegap
+                        runresults.iloc[0, 2] = -1 / (wagegap * 0.5516)
+                        runresults.iloc[0, 3] = (
+                            np.log(0.75 / (1 - 0.75)) - const
+                        ) / wagegap
+                        runresults.iloc[0, 4] = (
+                            np.log(0.5 / (1 - 0.5)) - const
+                        ) / wagegap
+                        runresults.iloc[0, 5] = (
+                            np.log(0.25 / (1 - 0.25)) - const
+                        ) / wagegap
+                    if j == 1:
+                        globals()[f"pointestimates{t}"] = runresults
+                    else:
+                        globals()[f"bstrapresults{t}"] = pd.concat(
+                            [(globals()[f"bstrapresults{t}"]), runresults],
+                        )
+                    convergencecounter += 1
+                except np.linalg.LinAlgError:
+                    pass
+
     tablecode = pd.DataFrame(index=range(1), columns=range(6))
     tablecode.columns = ["treatment", "mean", "sd", "p25", "p50", "p75"]
     for t in treatment_list:
