@@ -102,7 +102,7 @@ def table_3(df):
     return stat_df
 
 
-def table_5_and_7(df, treatment):
+def table_5_and_7(df, treatment_list):
     """Replicate table 5 of Mas, Alexandre, and Amanda Pallais (2017).
 
     Args:
@@ -113,8 +113,8 @@ def table_5_and_7(df, treatment):
         wtp_df (pandas.DataFrame): Table 5.
 
     """
-    reps = 700
-    for t in treatment:
+    reps = 50
+    for t in treatment_list:
         globals()[f"bstrapresults{t}"] = pd.DataFrame(index=range(1), columns=range(6))
         globals()[f"bstrapresults{t}"].columns = [
             "treatment",
@@ -134,6 +134,7 @@ def table_5_and_7(df, treatment):
             "p75",
         ]
         random.seed(91857785)
+        np.random.default_rng().bit_generator = np.random.SeedSequence(91857785)
         convergencecounter = 0
         expdata = df.loc[df.treatment_number == t, :]
         for j in list(range(1, reps + 1)):
@@ -166,7 +167,7 @@ def table_5_and_7(df, treatment):
                 convergencecounter += 1
     tablecode = pd.DataFrame(index=range(1), columns=range(6))
     tablecode.columns = ["treatment", "mean", "sd", "p25", "p50", "p75"]
-    for t in treatment:
+    for t in treatment_list:
         globals()[f"se{t}"] = (
             globals()[f"bstrapresults{t}"]
             .groupby(["treatment"])["mean", "sd", "p25", "p50", "p75"]

@@ -109,7 +109,7 @@ def task_create_table_5(depends_on, produces):
 
     Returns:
     -------
-        table5_wtp (pandas.DataFrame): Table 5.
+        table_5_wtp (pandas.DataFrame): Table 5.
 
     """
     df = pd.read_pickle(depends_on)
@@ -128,7 +128,7 @@ def task_create_table_7(depends_on, produces):
 
     Returns:
     -------
-        table7_wtp (pandas.DataFrame): Table 7.
+        table_7_wtp (pandas.DataFrame): Table 7.
 
     """
     df = pd.read_pickle(depends_on)
