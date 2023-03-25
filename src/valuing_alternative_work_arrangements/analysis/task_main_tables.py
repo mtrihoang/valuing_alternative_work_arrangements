@@ -3,12 +3,14 @@ import pytask
 from valuing_alternative_work_arrangements.analysis.main_tables import (
     table_1,
     table_3,
-    table_5,
+    table_5_and_7,
 )
 from valuing_alternative_work_arrangements.config import (
     BLD,
     DUMMY_VARS,
     TABLE_3,
+    TABLE_5,
+    TABLE_7,
 )
 
 
@@ -111,5 +113,24 @@ def task_create_table_5(depends_on, produces):
 
     """
     df = pd.read_pickle(depends_on)
-    table5_wtp = table_5(df)
-    table5_wtp.to_pickle(produces)
+    table_5_wtp = table_5_and_7(df, TABLE_5)
+    table_5_wtp.to_pickle(produces)
+
+
+@pytask.mark.depends_on(BLD / "python" / "data" / "experimentdata.pkl")
+@pytask.mark.produces(BLD / "python" / "tables" / "table_7.pkl")
+def task_create_table_7(depends_on, produces):
+    """Replicate table 7 of Mas, Alexandre, and Amanda Pallais (2017).
+
+    Args:
+        depends_on (str): The experimentdata data.
+        produces (str): The folder path contains table 5.
+
+    Returns:
+    -------
+        table7_wtp (pandas.DataFrame): Table 7.
+
+    """
+    df = pd.read_pickle(depends_on)
+    table_7_wtp = table_5_and_7(df, TABLE_7)
+    table_7_wtp.to_pickle(produces)
