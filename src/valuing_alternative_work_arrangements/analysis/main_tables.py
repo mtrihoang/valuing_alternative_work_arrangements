@@ -113,7 +113,7 @@ def table_5(df):
         wtp_df (pandas.DataFrame): Table 5.
 
     """
-    reps = 5
+    reps = 700
     for t in [1, 4, 3, 5, 2]:
         globals()[f"bstrapresults{t}"] = pd.DataFrame(index=range(1), columns=range(6))
         globals()[f"bstrapresults{t}"].columns = [
