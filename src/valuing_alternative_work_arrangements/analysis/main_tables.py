@@ -134,7 +134,6 @@ def table_5_and_7(df, treatment_list):
             "p75",
         ]
         random.seed(91857785)
-        np.random.default_rng().bit_generator = np.random.SeedSequence(91857785)
         convergencecounter = 0
         expdata = df.loc[df.treatment_number == t, :]
         for j in list(range(1, reps + 1)):
@@ -142,7 +141,15 @@ def table_5_and_7(df, treatment_list):
                 runresults = pd.DataFrame(index=range(1), columns=range(6))
                 runresults.columns = ["treatment", "mean", "sd", "p25", "p50", "p75"]
                 runresults.iloc[0, 0] = t
-                bsample = expdata.sample(frac=1, replace=True) if j != 1 else expdata
+                bsample = (
+                    expdata.sample(
+                        frac=1,
+                        replace=True,
+                        random_state=np.random.default_rng(91857785),
+                    )
+                    if j != 1
+                    else expdata
+                )
                 bsample = bsample.reset_index()
                 ml = mylogit_mle2(bsample)
                 converged = ml.converged.mean()
