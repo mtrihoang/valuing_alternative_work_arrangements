@@ -134,6 +134,7 @@ def table_5_and_7(df, treatment_list):
             "p75",
         ]
         random.seed(91857785)
+        rng = np.random.default_rng(91857785)
         convergencecounter = 0
         expdata = df.loc[df.treatment_number == t, :]
         for j in list(range(1, reps + 1)):
@@ -145,7 +146,7 @@ def table_5_and_7(df, treatment_list):
                     expdata.sample(
                         frac=1,
                         replace=True,
-                        random_state=np.random.default_rng(91857785),
+                        random_state=rng,
                     )
                     if j != 1
                     else expdata
