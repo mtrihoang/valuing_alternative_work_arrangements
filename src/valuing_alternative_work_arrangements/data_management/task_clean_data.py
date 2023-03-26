@@ -36,42 +36,39 @@ for index, data_file in enumerate(DATA_FILES):
         df.to_pickle(produces)
 
 
-url_cps_march2016 = "https://www.dropbox.com/s/ri1mq4859sngizx/cps_march2016.dta?dl=1"
-
-
+@pytask.mark.depends_on(BLD / "python" / "data" / "cps_march2016.pkl")
 @pytask.mark.produces(BLD / "python" / "data" / "cpsmarch2016.pkl")
-def task_clean_cps_march2016(produces):
-    """Clean the cps_march2016 data from the Dropbox link and save it into the bld
-    folder.
+def task_clean_cps_march2016(depends_on, produces):
+    """Clean the cps_march2016 data and save it into the bld folder.
 
     Args:
-        produces: Specify the folder path where the cpsmarch2016 data will be located in.
+        depends_on (str): The cps_march2016 data.
+        produces (str): Specify the folder path where the cpsmarch2016 data will be located in.
 
     Returns:
     -------
         The cpsmarch2016 dataset.
 
     """
-    data = clean_cps_march2016(url_cps_march2016)
+    data = clean_cps_march2016(depends_on)
     data.to_pickle(produces)
 
 
-url_clean_cps_wss = "https://www.dropbox.com/s/8r70kj4qxda61vh/cps_wss.dta?dl=1"
-
-
+@pytask.mark.depends_on(BLD / "python" / "data" / "cps_wss.pkl")
 @pytask.mark.produces(BLD / "python" / "data" / "cpswss.pkl")
-def task_clean_cps_wss(produces):
-    """Clean the cps_wss data from the Dropbox link and save it into the bld folder.
+def task_clean_cps_wss(depends_on, produces):
+    """Clean the cps_wss data and save it into the bld folder.
 
     Args:
-        produces: Specify the folder path where the cpswss data will be located in.
+        depends_on (str): The cps_wss data.
+        produces (str): Specify the folder path where the cpswss data will be located in.
 
     Returns:
     -------
         The cpswss dataset.
 
     """
-    data = clean_cps_wss(url_clean_cps_wss)
+    data = clean_cps_wss(depends_on)
     data.to_pickle(produces)
 
 
@@ -92,8 +89,8 @@ def task_append_data(depends_on, produces):
     """Append experimental data files into a single file.
 
     Args:
-        depends_on: The (individual) experimental data.
-        produces: Specify the folder path where the appended data will be located in.
+        depends_on (str): The (individual) experimental data.
+        produces (str): Specify the folder path where the appended data will be located in.
 
     Returns:
     -------

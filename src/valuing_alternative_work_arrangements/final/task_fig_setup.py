@@ -15,21 +15,23 @@ from valuing_alternative_work_arrangements.config import (
     TASK_FIGURES,
 )
 
-url_experimentdata = "https://www.dropbox.com/s/x9un4pkhd57vdei/experimentdata.dta?dl=1"
+sns.set_style("darkgrid")
 
 for index, treatment_number in enumerate(TASK_FIGURES):
     index = index + 1
     kwargs = {
+        "depends_on": BLD / "python" / "data" / "experimentdata.pkl",
         "treatment_number": treatment_number,
         "produces": BLD / "python" / "figures" / f"fig_{index}_standard_logit.png",
     }
 
     @pytask.mark.task(id=treatment_number, kwargs=kwargs)
-    def fig_setup_sd_logit(produces, treatment_number):
+    def fig_setup_sd_logit(depends_on, produces, treatment_number):
         """Replicate figures of Mas, Alexandre, and Amanda Pallais (2017) associated
         with (standard) logit models.
 
         Args:
+            depends_on (str): The experimental data.
             produces (str): The folder path contains outputs.
             treatment_number (int): The value of the treatment variable in list TASK_FIGURES.
 
@@ -38,7 +40,7 @@ for index, treatment_number in enumerate(TASK_FIGURES):
             The plot for workers's willingness to pay.
 
         """
-        df = pd.read_stata(url_experimentdata)
+        df = pd.read_pickle(depends_on)
         df = df.loc[
             (df["treatment_number"] == treatment_number)
             & (df["chose_position1"].notnull()),
@@ -48,7 +50,6 @@ for index, treatment_number in enumerate(TASK_FIGURES):
         df_line = mylogit(df)
 
         fig, ax = plt.subplots()
-        ax = sns.set_style("darkgrid")
         ax = sns.lineplot(data=df_line, x="rev_wagegap", y="lnf", color="black")
         ax = sns.scatterplot(
             data=df_scatter,
@@ -93,11 +94,10 @@ for index, treatment_number in enumerate(TASK_FIGURES):
         fig.savefig(produces, dpi=1000)
 
 
-url_experimentdata = "https://www.dropbox.com/s/x9un4pkhd57vdei/experimentdata.dta?dl=1"
-
 for index, treatment_number in enumerate(TASK_FIGURES):
     index = index + 1
     kwargs = {
+        "depends_on": BLD / "python" / "data" / "experimentdata.pkl",
         "treatment_number": treatment_number,
         "produces": BLD
         / "python"
@@ -106,11 +106,12 @@ for index, treatment_number in enumerate(TASK_FIGURES):
     }
 
     @pytask.mark.task(id=treatment_number, kwargs=kwargs)
-    def fig_setup_ec_logit(produces, treatment_number):
+    def fig_setup_ec_logit(depends_on, produces, treatment_number):
         """Replicate figures of Mas, Alexandre, and Amanda Pallais (2017) associated
         with (error-corrected) logit models.
 
         Args:
+            depends_on (str): The experimental data.
             produces (str): The folder path contains outputs.
             treatment_number (int): The value of the treatment variable in list TASK_FIGURES.
 
@@ -119,7 +120,7 @@ for index, treatment_number in enumerate(TASK_FIGURES):
             The plot for workers's willingness to pay.
 
         """
-        df = pd.read_stata(url_experimentdata)
+        df = pd.read_pickle(depends_on)
         df = df.loc[
             (df["treatment_number"] == treatment_number)
             & (df["chose_position1"].notnull()),
@@ -129,7 +130,6 @@ for index, treatment_number in enumerate(TASK_FIGURES):
         df_line = mylogit_mle2(df)
 
         fig, ax = plt.subplots()
-        ax = sns.set_style("darkgrid")
         ax = sns.lineplot(data=df_line, x="rev_wagegap", y="lnf", color="black")
         ax = sns.scatterplot(
             data=df_scatter,

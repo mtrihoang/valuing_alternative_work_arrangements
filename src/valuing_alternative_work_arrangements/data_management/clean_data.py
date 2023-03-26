@@ -13,7 +13,7 @@ def clean_cps_march2016(url_cps_march2016):
         df (pandas.DataFrame): The final cpsmarch2016 data.
 
     """
-    df = pd.read_stata(url_cps_march2016)
+    df = pd.read_pickle(url_cps_march2016)
     df.loc[(df["gtcbsast"] == 2) | (df["gtcbsast"] == 1), "any_city"] = 1
     df.loc[df["pesex"] == 2, "female"] = 1
     df["female"] = df["female"].fillna(0)
@@ -94,7 +94,7 @@ def clean_cps_wss(url_cps_wss):
         df (pandas.DataFrame): The final cps_wss data.
 
     """
-    df = pd.read_stata(url_cps_wss)
+    df = pd.read_pickle(url_cps_wss)
     df.loc[
         (df["wkstat"] == 12)
         | (df["wkstat"] == 21)
