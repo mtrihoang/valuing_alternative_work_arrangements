@@ -95,6 +95,7 @@ def task_create_table_3(depends_on, produces):
     for name_df in TABLE_3.values():
         name_list.append(eval(name_df))
     stat_df = pd.concat(name_list, axis=1)
+    stat_df = stat_df.drop(labels="age_")
     stat_df.to_pickle(produces)
 
 
