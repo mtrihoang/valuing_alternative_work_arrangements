@@ -185,7 +185,7 @@ class Newlikelihood(GenericLikelihoodModel):
         return Xb
 
 
-def mylogit_mle2(df):
+def mylogit_mle2(df, error=None):
     """Apply the maximum likelihood estimation method to estimate the parameters of the
     (error-corrected) logistic regression model.
 
@@ -199,10 +199,10 @@ def mylogit_mle2(df):
     """
     df = df.dropna(subset=["wagegap", "chose_position1"])
     df = me_correction(df)
-    error = df["error"]
     y = df["chose_position1"]
     X = df[["wagegap"]]
     X = sm.add_constant(X)
+    error = df["error"] if error is None else np.full((len(y),), error)
     model = Newlikelihood(endog=y, exog=X, error=error)
     result = model.fit(method="newton", cov_type="HC3", maxiter=100)
     num_mle_iterations = result.mle_retvals["iterations"]
