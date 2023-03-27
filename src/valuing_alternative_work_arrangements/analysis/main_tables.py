@@ -193,3 +193,113 @@ def table_5_and_7(df, treatment_list):
         )
     wtp_df = tablecode.dropna(subset=["mean", "sd", "p25", "p50", "p75"]).reset_index()
     return wtp_df
+
+
+def table_6(df, treatment_list, error):
+    """Replicate table 6 of Mas, Alexandre, and Amanda Pallais (2017).
+
+    Args:
+        df (pandas.DataFrame): The experimentdata data.
+        treatment_list (lst): The list of treatment numbers.
+        error (float): The given error.
+
+    Returns:
+    -------
+        c_df (pandas.DataFrame): Table 5.
+
+    """
+    for treatment in treatment_list:
+        if treatment == 14:
+            df_temp = df.loc[df.treatment_number == treatment, :]
+            logit_df = mylogit_mle2(df_temp, error)
+            const = logit_df.const.mean()
+            wagegap = logit_df.wagegap.mean()
+            c11 = -const / wagegap
+            c12 = (40 * (16 - (-const / wagegap)) - (20 * 16)) / 20
+        elif treatment == 26:
+            df_temp = df.loc[df.treatment_number == treatment, :]
+            version_dummies = pd.get_dummies(df_temp["version"], prefix="V")
+            df_temp = pd.concat([df_temp, version_dummies], axis=1)
+            df_temp = df_temp.rename(columns={"V_1.0": "V1", "V_2.0": "V2"})
+            reg = smf.ols("chose_ot ~ V1 + V2 - 1", df_temp).fit()
+            b_V1 = reg.params[0]
+            b_V2 = reg.params[1]
+            c21 = (
+                0.2
+                * (
+                    (
+                        (
+                            np.log(
+                                (1 - ((b_V1 - error) / (1 - 2 * error)))
+                                / ((b_V1 - error) / (1 - 2 * error)),
+                            )
+                        )
+                        / (
+                            np.log(
+                                (1 - ((b_V2 - error) / (1 - 2 * error)))
+                                / ((b_V2 - error) / (1 - 2 * error)),
+                            )
+                        )
+                    )
+                    * 16
+                    - 8
+                )
+                / (
+                    (
+                        (
+                            np.log(
+                                (1 - ((b_V1 - error) / (1 - 2 * error)))
+                                / ((b_V1 - error) / (1 - 2 * error)),
+                            )
+                        )
+                        / (
+                            np.log(
+                                (1 - ((b_V2 - error) / (1 - 2 * error)))
+                                / ((b_V2 - error) / (1 - 2 * error)),
+                            )
+                        )
+                    )
+                    - 1
+                )
+            )
+            c22 = (
+                (
+                    (
+                        np.log(
+                            (1 - ((b_V1 - error) / (1 - 2 * error)))
+                            / ((b_V1 - error) / (1 - 2 * error)),
+                        )
+                    )
+                    / (
+                        np.log(
+                            (1 - ((b_V2 - error) / (1 - 2 * error)))
+                            / ((b_V2 - error) / (1 - 2 * error)),
+                        )
+                    )
+                )
+                * 16
+                - 8
+            ) / (
+                (
+                    (
+                        np.log(
+                            (1 - ((b_V1 - error) / (1 - 2 * error)))
+                            / ((b_V1 - error) / (1 - 2 * error)),
+                        )
+                    )
+                    / (
+                        np.log(
+                            (1 - ((b_V2 - error) / (1 - 2 * error)))
+                            / ((b_V2 - error) / (1 - 2 * error)),
+                        )
+                    )
+                )
+                - 1
+            ) + 16
+    c_df = pd.DataFrame(
+        [[c11, c12], [c21, c22]],
+        columns=["WTP for 40 hour-per-week job", "Shadow value of time"],
+        index=["20 hour-per-week job", "50 hour-per-week job"],
+    )
+    c_df = round(c_df, 2)
+    return c_df
