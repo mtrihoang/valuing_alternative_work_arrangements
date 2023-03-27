@@ -96,6 +96,13 @@ def task_create_table_3(depends_on, produces):
         name_list.append(eval(name_df))
     stat_df = pd.concat(name_list, axis=1)
     stat_df = stat_df.drop(labels="age_")
+    stat_df.columns = [
+        "Experiment main treatments",
+        "CPSphone occupations",
+        "CPS phone occupations in cities",
+        "UAS",
+        "CPS all",
+    ]
     stat_df.to_pickle(produces)
 
 
