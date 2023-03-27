@@ -301,5 +301,5 @@ def table_6(df, treatment_list, error):
         columns=["WTP for 40 hour-per-week job", "Shadow value of time"],
         index=["20 hour-per-week job", "50 hour-per-week job"],
     )
-    c_df = round(c_df, 2)
+    c_df = c_df.round(2)
     return c_df
