@@ -108,7 +108,7 @@ class Newlikelihood(GenericLikelihoodModel):
         self.error = error
 
     def loglikeobs(self, params):
-        """Estimate the log-likelihood of model for all observations at params,
+        """Estimate the log-likelihood of the model for all observations at params,
         associated with the error-corrected maximum likelihood logit model.
 
         Args:
@@ -136,8 +136,8 @@ class Newlikelihood(GenericLikelihoodModel):
         return llf_obs
 
     def loglike(self, params):
-        """Estimate the log-likelihood of model at params, associated with the error-
-        corrected maximum likelihood logit model.
+        """Estimate the log-likelihood of the model at params, associated with the
+        error- corrected maximum likelihood logit model.
 
         Args:
             params (pandas.Series): The logit coefficients generated from sm.Logit().
@@ -152,8 +152,8 @@ class Newlikelihood(GenericLikelihoodModel):
         return llf
 
     def nloglike(self, params):
-        """Estimate the negative log-likelihood of model at params, associated with the
-        error-corrected maximum likelihood logit model.
+        """Estimate the negative log-likelihood of the model at params, associated with
+        the error-corrected maximum likelihood logit model.
 
         Args:
             params (pandas.Series): The logit coefficients generated from sm.Logit().
@@ -168,8 +168,8 @@ class Newlikelihood(GenericLikelihoodModel):
         return nllf
 
     def predict(self, params, exog):
-        """Estimate the negative log-likelihood of model at params, associated with the
-        error-corrected maximum likelihood logit model.
+        """Obtain the linear prediction at params, associated with the error-corrected
+        maximum likelihood logit model.
 
         Args:
             params (pandas.Series): The logit coefficients generated from sm.Logit().
