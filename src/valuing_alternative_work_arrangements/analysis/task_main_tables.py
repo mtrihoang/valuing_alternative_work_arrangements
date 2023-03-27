@@ -4,12 +4,14 @@ from valuing_alternative_work_arrangements.analysis.main_tables import (
     table_1,
     table_3,
     table_5_and_7,
+    table_6,
 )
 from valuing_alternative_work_arrangements.config import (
     BLD,
     DUMMY_VARS,
     TABLE_3,
     TABLE_5,
+    TABLE_6,
     TABLE_7,
 )
 
@@ -126,13 +128,32 @@ def task_create_table_5(depends_on, produces):
 
 
 @pytask.mark.depends_on(BLD / "python" / "data" / "experimentdata.pkl")
+@pytask.mark.produces(BLD / "python" / "tables" / "table_6.pkl")
+def task_create_table_6(depends_on, produces):
+    """Replicate table 6 of Mas, Alexandre, and Amanda Pallais (2017).
+
+    Args:
+        depends_on (str): The experimentdata data.
+        produces (str): The folder path contains table 6.
+
+    Returns:
+    -------
+        table_6_wtp (pandas.DataFrame): Table 6.
+
+    """
+    df = pd.read_pickle(depends_on)
+    table_6_wtp = table_6(df, TABLE_6, 0.145)
+    table_6_wtp.to_pickle(produces)
+
+
+@pytask.mark.depends_on(BLD / "python" / "data" / "experimentdata.pkl")
 @pytask.mark.produces(BLD / "python" / "tables" / "table_7.pkl")
 def task_create_table_7(depends_on, produces):
     """Replicate table 7 of Mas, Alexandre, and Amanda Pallais (2017).
 
     Args:
         depends_on (str): The experimentdata data.
-        produces (str): The folder path contains table 5.
+        produces (str): The folder path contains table 7.
 
     Returns:
     -------
