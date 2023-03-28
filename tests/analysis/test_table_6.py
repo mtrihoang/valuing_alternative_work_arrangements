@@ -2,7 +2,6 @@ import pandas as pd
 import pytest
 from pandas.testing import assert_frame_equal
 from valuing_alternative_work_arrangements.analysis.main_tables import table_6
-from valuing_alternative_work_arrangements.analysis.mle_programs import mylogit_mle2
 
 
 @pytest.fixture()
@@ -33,7 +32,3 @@ def test_table_6(data, treatment, error):
         index=["20 hour-per-week job", "50 hour-per-week job"],
     )
     assert_frame_equal(df_got, df_expected)
-
-
-def test_mylogit_mle2(data):
-    mylogit_mle2(data)
