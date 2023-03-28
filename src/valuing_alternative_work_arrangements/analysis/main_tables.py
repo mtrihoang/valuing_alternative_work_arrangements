@@ -3,9 +3,11 @@ import random
 
 import numpy as np
 import pandas as pd
+import statsmodels.api as sm
 import statsmodels.formula.api as smf
 from statsmodels.iolib.summary2 import summary_col
 from valuing_alternative_work_arrangements.analysis.mle_programs import (
+    Newlikelihood,
     mylogit_mle2,
 )
 from valuing_alternative_work_arrangements.config import (
@@ -303,3 +305,33 @@ def table_6(df, treatment_list, error):
     )
     c_df = c_df.round(2)
     return c_df
+
+
+def table_8(df, endog, exog, weight, error=None):
+    """Replicate table 8 of Mas, Alexandre, and Amanda Pallais (2017).
+
+    Args:
+        df (pandas.DataFrame): The experimentdata data.
+        endog (str): The dependent variable.
+        endog (lst): The independent variables.
+        weight (str): The weight variable in the logistic model.
+        error (float): The given error.
+
+    Returns:
+    -------
+        params_df (pandas.DataFrame): The table contains coefficients of logistic regressions.
+
+    """
+    df = df.dropna(subset=exog)
+    y = df[endog]
+    X = df[exog]
+    X = sm.add_constant(X)
+    weight = df[weight]
+    error = np.full((len(y),), 0) if error is None else np.full((len(y),), error)
+    model = Newlikelihood(endog=y, exog=X, error=error)
+    result = model.fit(cov_type="HC3", maxiter=100, disp=False, weights=weight)
+    params_key = X.columns
+    params_value = result.params
+    params_dict = dict(zip(params_key, params_value))
+    params_df = pd.DataFrame(params_dict, index=["parameter"])
+    return params_df
