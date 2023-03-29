@@ -5,6 +5,7 @@ from valuing_alternative_work_arrangements.analysis.main_tables import (
     table_3,
     table_5_and_7,
     table_6,
+    table_8,
 )
 from valuing_alternative_work_arrangements.config import (
     BLD,
@@ -163,3 +164,114 @@ def task_create_table_7(depends_on, produces):
     df = pd.read_pickle(depends_on)
     table_7_wtp = table_5_and_7(df, TABLE_7)
     table_7_wtp.to_pickle(produces)
+
+
+@pytask.mark.depends_on(
+    {
+        1: BLD / "python" / "data" / "survey_wave1.pkl",
+        2: BLD / "python" / "data" / "survey_wave2.pkl",
+    },
+)
+@pytask.mark.produces(BLD / "python" / "tables" / "table_8.pkl")
+def task_create_table_8(depends_on, produces):
+    """Replicate each column of table 8 of Mas, Alexandre, and Amanda Pallais (2017).
+
+    Args:
+        depends_on (str): The survey data.
+        produces (str): The folder path contains table 8.
+
+    Returns:
+    -------
+        table_8_wtp (pandas.DataFrame): Table 8.
+
+    """
+    df1 = pd.read_pickle(depends_on[1])
+
+    df1["wagegap_hasirregjob"] = df1["wagegap_irreg"] * df1["hasirregjob"]
+    df1["wagegap_hasflexjob"] = df1["wagegap_flex"] * df1["hasflexjob"]
+
+    df_logit_11 = table_8(
+        df1,
+        endog="chose_flex",
+        exog=["wagegap_flex"],
+        weight="wgt_flex",
+        error=0.11363387,
+    )
+    c11 = -df_logit_11["const"] / df_logit_11["wagegap_flex"]
+
+    df_logit_12 = table_8(
+        df1,
+        endog="chose_flex",
+        exog=["wagegap_flex", "wagegap_hasflexjob", "hasflexjob"],
+        weight="wgt_flex",
+        error=0.11363387,
+    )
+    c13 = -df_logit_12["const"] / df_logit_12["wagegap_flex"]
+    c12 = -(df_logit_12["const"] + df_logit_12["hasflexjob"]) / (
+        df_logit_12["wagegap_flex"] + df_logit_12["wagegap_hasflexjob"]
+    )
+    c14 = c13 - c12
+
+    df_logit_31 = table_8(
+        df1,
+        endog="chose_fixed",
+        exog=["wagegap_irreg"],
+        weight="wgt_irreg",
+        error=0.11363387,
+    )
+    c31 = -df_logit_31["const"] / df_logit_31["wagegap_irreg"]
+
+    df_logit_32 = table_8(
+        df1,
+        endog="chose_fixed",
+        exog=["wagegap_irreg", "wagegap_hasirregjob", "hasirregjob"],
+        weight="wgt_irreg",
+        error=0.11363387,
+    )
+    c33 = -df_logit_32["const"] / df_logit_32["wagegap_irreg"]
+    c32 = -(df_logit_32["const"] + df_logit_32["hasirregjob"]) / (
+        df_logit_32["wagegap_irreg"] + df_logit_32["wagegap_hasirregjob"]
+    )
+    c34 = c33 - c32
+
+    df2 = pd.read_pickle(depends_on[2])
+
+    df2["wagegap_haswfhjob"] = df2["wagegap_wfh"] * df2["haswfhjob"]
+
+    df_logit_21 = table_8(
+        df2,
+        endog="chose_wfh",
+        exog=["wagegap_wfh"],
+        weight="wgt_wfh",
+        error=0.03205054,
+    )
+    c21 = -df_logit_21["const"] / df_logit_21["wagegap_wfh"]
+
+    df_logit_22 = table_8(
+        df2,
+        endog="chose_wfh",
+        exog=["wagegap_wfh", "wagegap_haswfhjob", "haswfhjob"],
+        weight="wgt_wfh",
+        error=0.03205054,
+    )
+    c23 = -df_logit_22["const"] / df_logit_22["wagegap_wfh"]
+    c22 = -(df_logit_22["const"] + df_logit_22["haswfhjob"]) / (
+        df_logit_22["wagegap_wfh"] + df_logit_22["wagegap_haswfhjob"]
+    )
+    c24 = c22 - c23
+
+    wtp_df = [[c11, c12, c13, c14], [c21, c22, c23, c24], [c31, c32, c33, c34]]
+    index = [
+        "Panel A. Mean WTP for flexible schedule",
+        "Panel B. Mean WTP for work from home",
+        "Panel C. Mean WTP to avoid employer discretion",
+    ]
+    columns = [
+        "All",
+        "In flexible schedule job",
+        "Not in flexible schedule job",
+        "Difference",
+    ]
+    wtp_df = pd.DataFrame(wtp_df, index=index, columns=columns).astype(float)
+    table_8_wtp = wtp_df.round(1)
+    table_8_wtp.to_pickle(produces)
