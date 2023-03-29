@@ -39,6 +39,7 @@ dependencies:
   - scipy
   - seaborn
   - numpy
+  - pytask-latex
 
   - pip:
       - -e .  # installs the project
