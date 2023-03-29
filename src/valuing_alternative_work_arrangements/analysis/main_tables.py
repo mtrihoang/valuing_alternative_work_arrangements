@@ -322,7 +322,8 @@ def table_8(df, endog, exog, weight, error=None):
         params_df (pandas.DataFrame): The table contains coefficients of logistic regressions.
 
     """
-    df = df.dropna(subset=exog)
+    subset = [endog, *exog]
+    df = df.dropna(subset=subset)
     y = df[endog]
     X = df[exog]
     X = sm.add_constant(X)
@@ -334,4 +335,5 @@ def table_8(df, endog, exog, weight, error=None):
     params_value = result.params
     params_dict = dict(zip(params_key, params_value))
     params_df = pd.DataFrame(params_dict, index=["parameter"])
+    params_df["llf"] = result.llf
     return params_df
