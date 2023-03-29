@@ -1,14 +1,89 @@
-\documentclass{article}
-\usepackage{graphicx} % Required for inserting images
-
-\title{epp2}
-\author{trihoang30ec }
-\date{March 2023}
+\documentclass[11pt]{article}
+\usepackage{blindtext}
+\usepackage{setspace}
+\usepackage{multicol}
+\usepackage[super]{nth}
+\usepackage[utf8]{inputenc}
+\usepackage{tikz}
+\usepackage{tkz-euclide}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage[english]{babel}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\graphicspath{ {./images/} }
+\usepackage{geometry}
+ \geometry{
+ a4paper,
+ left=25mm,
+ right=20mm,
+ top=25mm,
+ bottom=20mm,
+ }
+ \definecolor{urlcolor}{rgb}{0,.145,.698}
+\definecolor{linkcolor}{rgb}{.71,0.21,0.01}
+\definecolor{citecolor}{rgb}{.12,.54,.11}
+\hypersetup{
+breaklinks=true,
+colorlinks=true,
+urlcolor=urlcolor,
+linkcolor=linkcolor,
+citecolor=citecolor,
+}
+\usepackage{lmodern}
+\newcommand{\mycomment}[1]{}
+\usepackage[T1]{fontenc}
+\usepackage{bookmark}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{textcomp}
+\usepackage{subfigure}
+\graphicspath{{./pictures/}}
+\usepackage{lmodern}
+\usepackage{float}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{adjustbox,subfiles}
+\usepackage{xspace}
+\setlength{\parindent}{0pt}
+\usepackage{pgfplots}
+\usepackage{apacite}
+\usepackage[authoryear]{natbib}
+\usepackage{xr}
+\usepackage{ctable}
 
 \begin{document}
 
-\maketitle
+\title{\textbf{Valuing Alternative Work Arrangements}}
+\author{(Effective Programming Practices for Economists, Winter Term 2022/23)}
+\date{\today}
 
-\section{Introduction}
+\maketitle
+\textbf{Minh Tri Hoang} \textbar{} ID:3291616 \textbar{} Master of Science in Economics, University of Bonn \\ \\
+This document contains my replication for the following paper: Mas, Alexandre, and Amanda Pallais. 2017. \href{https://www.aeaweb.org/articles?id=10.1257/aer.20161500}{Valuing Alternative Work Arrangements}. American Economic Review. 107 (12): 3722-59.
+
+\tableofcontents
+
+\pagebreak
+
+\hypertarget{introduction}{%
+\section{Introduction}\label{introduction}}
+
+Estimate willingness to pay (WTP) \cite{10.1257/aer.20161500}.
+
+\hypertarget{Conceptual and Econometric Framework}{%
+\section{Conceptual and Econometric Framework}\label{Conceptual and Econometric Framework}}
+
+Discrete choice experiments, logistic distribution for WTP
+
+\hypertarget{Discussion and Conclusion}{%
+\section{Discussion and Conclusion}\label{Discussion and Conclusion}}
+
+
+\bibliographystyle{apacite}
+\bibliography{refs}
 
 \end{document}
