@@ -1,14 +1,15 @@
 import pandas as pd
 import pytest
 from valuing_alternative_work_arrangements.analysis.mle_programs import mylogit_mle2
+from valuing_alternative_work_arrangements.config import BLD
 
 DESIRED_LOG_LIKELIHOOD = -382.74
 
 
 @pytest.fixture()
 def data():
-    experimentdata = pd.read_stata(
-        "https://www.dropbox.com/s/x9un4pkhd57vdei/experimentdata.dta?dl=1",
+    experimentdata = pd.read_pickle(
+        BLD / "python" / "data" / "experimentdata.pkl",
     )
     return experimentdata
 
