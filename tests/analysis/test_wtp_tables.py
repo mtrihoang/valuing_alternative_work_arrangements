@@ -103,4 +103,6 @@ def test_table_8(survey_wave1, survey_wave2):
     )
     llf_got = llf_got.astype(float)
     llf_expected = pd.array([-953.12854, -944.75662, -978.73315, -886.88245, -884.9632])
-    assert np.all(llf_got > llf_expected)
+    assert np.all(
+        llf_got >= llf_expected,
+    ), "The log-likelihood values at the optimum must be at least as good as the ones generated from authors' Stata do files"
