@@ -134,7 +134,7 @@ readers can easily follow and compare. In particular, Python functions and class
 named almost the same as Stata programs in authors' do files. All figures are labelled
 as those in the paper.
 
-The below tables shows Stata to Python equivalents.
+The below table shows Stata to Python equivalents.
 
 | Stata                   | Python                                              |
 | ----------------------- | --------------------------------------------------- |
