@@ -2,10 +2,13 @@
 
 by Minh Tri Hoang | Master of Science in Economics - University of Bonn
 
-This document contains my replication for the following paper: Mas, Alexandre, and
+This is my final project on Effective Programming Practices for Economists. The course
+was taught by [Dr. Janoś Gabler](https://janosg.com/) (University of Bonn).
+
+This repository contains my replication for the following paper: Mas, Alexandre, and
 Amanda Pallais. 2017.
 [Valuing Alternative Work Arrangements](https://www.aeaweb.org/articles?id=10.1257/aer.20161500).
-American Economic Review. 107 (12): 3722-59.
+American Economic Review. 107 (12): 3722-59. It is my final project on
 
 [![pre-commit.ci status](https://results.pre-commit.ci/badge/github/mtrihoang/valuing_alternative_work_arrangements/main.svg)](https://results.pre-commit.ci/latest/github/mtrihoang/valuing_alternative_work_arrangements/main)
 [![image](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
@@ -45,7 +48,7 @@ pytask
 
 ## Folder Structure
 
-My repository contains
+My repository contains the following folders
 
 - `src`
 
@@ -120,6 +123,27 @@ bld/
         ├── table_7.pkl
         └── table_8.pkl
 ```
+
+## Information about Replication and Transparency
+
+For the replication, I try to remain the original structure of Stata programs so that
+readers can easily follow and compare. In particular, Python functions and classes are
+named almost the same as Stata programs in authors' do files. All figures are labelled
+as those in the paper.
+
+The below tables shows Stata to Python equivalents.
+
+| Stata                   | Python                                              |
+| ----------------------- | --------------------------------------------------- |
+| `1_main_tables.do`      | `main_tables.py` + `task_main_tables.py`            |
+| `2_figures.do`          | `task_fig_setup.py`                                 |
+| `mle_programs.do`       | `mle_programs.py`                                   |
+| `breakpoint_program.do` | `breakpoint_program.py`                             |
+| program `fig_setup`     | function `fig_setup()`                              |
+| program `breakval_figs` | function `breakval_figs()`                          |
+| program `me_correction` | function `me_correction()`                          |
+| program `mylogit_mle1`  | function `test_mylogit_mle1()`                      |
+| program `mylogit_mle2`  | class `Newlikelihood()` + function `mylogit_mle2()` |
 
 ## Credits
 
