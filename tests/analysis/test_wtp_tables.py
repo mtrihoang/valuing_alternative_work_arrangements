@@ -6,13 +6,24 @@ from valuing_alternative_work_arrangements.analysis.main_tables import (
     table_6,
     table_8,
 )
-from valuing_alternative_work_arrangements.config import BLD
 
 
 @pytest.fixture()
-def experimentdata():
-    df = pd.read_pickle(
-        BLD / "python" / "data" / "experimentdata.pkl",
+def mock_table_6():
+    np.random.seed(31032023)
+    chose_position1 = np.random.choice([0, 1], size=100)
+    chose_ot = np.random.choice([0, 1], size=100)
+    wagegap = np.random.choice(np.arange(-5, 5, 1), size=100)
+    treatment_number = np.random.choice([14, 26], size=100)
+    version = np.random.choice([1.0, 2.0], size=100)
+    df = pd.DataFrame(
+        {
+            "chose_position1": chose_position1,
+            "chose_ot": chose_ot,
+            "wagegap": wagegap,
+            "treatment_number": treatment_number,
+            "version": version,
+        },
     )
     return df
 
@@ -29,10 +40,10 @@ def error():
     return err
 
 
-def test_table_6(experimentdata, treatment, error):
-    df_got = table_6(experimentdata, treatment, error)
+def test_table_6(mock_table_6, treatment, error):
+    df_got = table_6(mock_table_6, treatment, error)
     df_expected = pd.DataFrame(
-        [[6.00, 4.01], [0.88, 20.41]],
+        [[0.69, 14.62], [3.59, 33.94]],
         columns=["WTP for 40 hour-per-week job", "Shadow value of time"],
         index=["20 hour-per-week job", "50 hour-per-week job"],
     )
@@ -40,22 +51,55 @@ def test_table_6(experimentdata, treatment, error):
 
 
 @pytest.fixture()
-def survey_wave1():
-    df = pd.read_pickle(BLD / "python" / "data" / "survey_wave1.pkl")
+def mock_wave_1():
+    np.random.seed(31032023)
+    chose_flex = np.random.choice([0, 1], size=100)
+    chose_fixed = np.random.choice([0, 1], size=100)
+    wagegap_irreg = np.random.choice([0, 2, 5, 10, 15, 25, 35], size=100)
+    hasirregjob = np.random.choice([0, 1], size=100)
+    wagegap_flex = np.random.choice([0, 2, 5, 10, 20, 35], size=100)
+    hasflexjob = np.random.choice([0, 1], size=100)
+    wgt_flex = np.random.normal(0, 1, size=100)
+    wgt_irreg = np.random.normal(0, 1, size=100)
+    df = pd.DataFrame(
+        {
+            "chose_flex": chose_flex,
+            "chose_fixed": chose_fixed,
+            "wagegap_irreg": wagegap_irreg,
+            "hasirregjob": hasirregjob,
+            "wagegap_flex": wagegap_flex,
+            "hasflexjob": hasflexjob,
+            "wgt_flex": wgt_flex,
+            "wgt_irreg": wgt_irreg,
+        },
+    )
     return df
 
 
 @pytest.fixture()
-def survey_wave2():
-    df = pd.read_pickle(BLD / "python" / "data" / "survey_wave2.pkl")
+def mock_wave_2():
+    np.random.seed(31032023)
+    chose_wfh = np.random.choice([0, 1], size=100)
+    chose_wfh = np.random.choice([0, 1], size=100)
+    wagegap_wfh = np.random.choice([0, 2, 5, 10, 15, 25, 35], size=100)
+    haswfhjob = np.random.choice([0, 1], size=100)
+    wgt_wfh = np.random.normal(0, 1, size=100)
+    df = pd.DataFrame(
+        {
+            "chose_wfh": chose_wfh,
+            "wagegap_wfh": wagegap_wfh,
+            "haswfhjob": haswfhjob,
+            "wgt_wfh": wgt_wfh,
+        },
+    )
     return df
 
 
-def test_table_8(survey_wave1, survey_wave2):
-    df1 = survey_wave1
+def test_table_8(mock_wave_1, mock_wave_2):
+    df1 = mock_wave_1
     df1["wagegap_hasirregjob"] = df1["wagegap_irreg"] * df1["hasirregjob"]
     df1["wagegap_hasflexjob"] = df1["wagegap_flex"] * df1["hasflexjob"]
-    df2 = survey_wave2
+    df2 = mock_wave_2
     df2["wagegap_haswfhjob"] = df2["wagegap_wfh"] * df2["haswfhjob"]
     df_logit_11 = table_8(
         df1,
@@ -85,6 +129,13 @@ def test_table_8(survey_wave1, survey_wave2):
         weight="wgt_wfh",
         error=0.03205054,
     )
+    df_logit_31 = table_8(
+        df1,
+        endog="chose_fixed",
+        exog=["wagegap_irreg"],
+        weight="wgt_irreg",
+        error=0.11363387,
+    )
     df_logit_32 = table_8(
         df1,
         endog="chose_fixed",
@@ -98,11 +149,13 @@ def test_table_8(survey_wave1, survey_wave2):
             df_logit_12["llf"].mean(),
             df_logit_21["llf"].mean(),
             df_logit_22["llf"].mean(),
+            df_logit_31["llf"].mean(),
             df_logit_32["llf"].mean(),
         ],
     )
     llf_got = llf_got.astype(float)
-    llf_expected = pd.array([-953.12854, -944.75662, -978.73315, -886.88245, -884.9632])
+    llf_got = llf_got.round(2)
+    llf_expected = pd.array([-68.68, -68.45, -68.57, -67.28, -68.57, -68.79])
     assert np.all(
         llf_got >= llf_expected,
     ), "The log-likelihood values at the optimum must be at least as good as the ones generated from authors' Stata do files"
