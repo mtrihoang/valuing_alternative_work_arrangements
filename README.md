@@ -127,7 +127,10 @@ bld/
 ## Information about Replication and Transparency
 
 The original data and Stata do files used in the paper can be accessed
-[here](https://www.aeaweb.org/articles?id=10.1257/aer.20161500).
+[here](https://www.aeaweb.org/articles?id=10.1257/aer.20161500). Some numeric variables
+of interest in the Stata files are labelled, which will be converted to string variables
+when using Python functions like `pandas.read_stata()`. Therefore, I dropped all value
+labels of the variables in Stata before importing them to Python.
 
 For the replication, I try to remain the original structure of Stata programs so that
 readers can easily follow and compare. In particular, Python functions and classes are
