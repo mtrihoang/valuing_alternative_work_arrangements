@@ -26,7 +26,8 @@ def table_1(df):
         coef_df (pandas.DataFrame): Contain estimates for compensating differentials from the observational data using weekly earnings.
 
     """
-    prefix_var = [df.columns[df.columns.str.startswith(i)].tolist() for i in PREFIX]
+    prefix = ["race_", "ed_", "mar_"]
+    prefix_var = [df.columns[df.columns.str.startswith(i)].tolist() for i in prefix]
     prefix_var = list(itertools.chain(*prefix_var))
     xvar = [
         "flexhrs",
@@ -37,12 +38,12 @@ def table_1(df):
         "irreg_inconst",
     ]
     sample = ["", "callcenterworker == 1", "hourly == 1"]
-    dummy = ["C(year)", "C(region)"]
     type = ["", "i.ind1990"]
     coef_lst = []
     for cond in sample:
         df_ols = df if cond == "" else df.query(cond)
         for ind in type:
+            dummy = ["C(year)", "C(region)"]
             if ind == "i.ind1990":
                 dummy.append("C(ind1990)")
             for var in xvar:
@@ -57,11 +58,16 @@ def table_1(df):
                     "inornearmetro",
                 ]
                 formula = "lnearn" + " ~ " + " + ".join(other_var + prefix_var + dummy)
-                res = smf.wls(formula, data=df_ols, weights=df_ols.earnwt).fit()
+                res = smf.wls(
+                    formula,
+                    data=df_ols,
+                    weights=df_ols.earnwt,
+                    entity_effects=True,
+                ).fit()
                 coef_table = summary_col([res], stars=True).tables[0]
                 coef_lst.append(coef_table.loc[var, :])
     coef_matrix = np.array(coef_lst).reshape(6, 6)
-    coef_df = pd.DataFrame(coef_matrix)
+    coef_df = pd.DataFrame(coef_matrix).T
     coef_df = coef_df.rename(
         index={
             0: "Can vary the times at which workday starts or ends",

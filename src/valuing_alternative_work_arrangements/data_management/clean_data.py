@@ -162,7 +162,8 @@ def clean_cps_wss(url_cps_wss):
     ] = 1
     df.loc[(df["inornearmetro"] != 1) & (df["metro"] != 0), "inornearmetro"] = 0
     df.loc[df["uhrswork1"] > 990, "uhrswork1"] = np.nan
-    df.loc[df["earnweek"] > 990, "earnweek"] = np.nan
+    df.loc[df["earnweek"] > 2884, "earnweek"] = np.nan
+    df.loc[df["earnweek"].isnull(), "lnearn"] = np.nan
     df.loc[df["paidhour"] == 2, "hourly"] = 1
     df.loc[(df["wsflexhrs"] == 2) & (df["wsflexhrs"] < 3), "flexhrs"] = 1
     df.loc[(df["flexhrs"] != 1) & (df["wsflexhrs"] < 3), "flexhrs"] = 0
