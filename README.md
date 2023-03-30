@@ -126,6 +126,9 @@ bld/
 
 ## Information about Replication and Transparency
 
+The original data and Stata do files used in the paper can be accessed
+[here](https://www.aeaweb.org/articles?id=10.1257/aer.20161500).
+
 For the replication, I try to remain the original structure of Stata programs so that
 readers can easily follow and compare. In particular, Python functions and classes are
 named almost the same as Stata programs in authors' do files. All figures are labelled
