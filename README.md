@@ -149,6 +149,12 @@ The below table shows Stata to Python equivalents.
 | program `mylogit_mle1`  | function `test_mylogit_mle1()`                      |
 | program `mylogit_mle2`  | class `Newlikelihood()` + function `mylogit_mle2()` |
 
+There are some discrepancies in my estimation results of table 8, compared with those in
+the paper. It might be attributed to the usage of logistic regressions combined with
+weight variable `[pw=]` and `custom likelihood functions` in authors' Stata codes.
+Therefore, I made a test for my function `table_8()` to verify whether the likelihood
+value at the optimum is at least as good as the one extracted from the Stata codes.
+
 ## Credits
 
 This project was created with [cookiecutter](https://github.com/audreyr/cookiecutter)
