@@ -121,7 +121,7 @@ def table_5_and_7(df, treatment_list):
         wtp_df (pandas.DataFrame): Table 5.
 
     """
-    reps = 5
+    reps = 100
     for t in treatment_list:
         globals()[f"bstrapresults{t}"] = pd.DataFrame(index=range(1), columns=range(6))
         globals()[f"bstrapresults{t}"].columns = [
